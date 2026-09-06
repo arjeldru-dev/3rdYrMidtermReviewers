@@ -175,6 +175,8 @@
   }
 
   if (btnOpenModal) btnOpenModal.addEventListener('click', openModal);
+  const btnOpenFromGuide = document.getElementById('btn-open-api-from-guide');
+  if (btnOpenFromGuide) btnOpenFromGuide.addEventListener('click', openModal);
   if (btnCloseModal) btnCloseModal.addEventListener('click', closeModal);
   if (btnSaveKey) btnSaveKey.addEventListener('click', saveApiKey);
   if (apiKeyInput) {

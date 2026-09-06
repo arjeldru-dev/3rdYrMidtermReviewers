@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Academic Reviewer Hub — Curated active recall question banks, KaTeX math typesetting, and AI study studios for university midterm exams.">
-  <title>StudyHub · Academic Reviewers & Active Recall Studios</title>
+  <meta name="description" content="StudyHub — 3rd Year Academic Reviewers & Active Recall Studios. Curated question banks, KaTeX math typesetting, and AI study tutoring for university midterms.">
+  <title>StudyHub · 3rd Year Midterm Reviewers & Active Recall Studios</title>
 
   <!-- Google Fonts Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,14 +24,19 @@
         <div class="brand-info">
           <span class="brand-name">
             StudyHub
-            <span class="brand-tag">2026</span>
+            <span class="brand-tag">3rd Year</span>
           </span>
-          <span class="brand-sub">Active Recall & AI Studios</span>
+          <span class="brand-sub">Active Recall &amp; AI Studios</span>
         </div>
       </a>
 
       <div class="header-actions">
-        <button type="button" id="btn-open-api-modal" class="btn-header" title="Configure AI Key">
+        <a href="#api-guide" class="btn-header" title="How to get a free Google Gemini API Key">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span>API Key Guide</span>
+        </a>
+
+        <button type="button" id="btn-open-api-modal" class="btn-header" title="Configure Gemini AI Key">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           <span>Gemini AI Key</span>
         </button>
@@ -52,32 +57,32 @@
   <section class="hero-section" aria-labelledby="hero-heading">
     <div class="hero-banner">
       <span class="pulse-dot" aria-hidden="true"></span>
-      <span>2026 Academic Midterm Exam Portals</span>
+      <span>3rd Year Midterm Examination Suites · 2026</span>
     </div>
     <h1 id="hero-heading" class="hero-title">
-      Course Reviewers &amp; <span class="gradient-text">Cognitive Recall</span> Studios.
+      Academic Reviewers &amp; <span class="gradient-text">Active Recall</span> Studios.
     </h1>
     <p class="hero-subtitle">
-      Self-contained, exam-grade question banks with KaTeX mathematical formulas, immediate step-by-step feedback, and AI tutoring powered by Gemini Flash. 100% free &amp; client-side.
+      Curated problem banks, KaTeX mathematical formulas, step-by-step solutions, and cognitive AI tutoring powered by Gemini Flash. 100% free, fast, and client-side.
     </p>
 
     <!-- Metrics Strip -->
     <div class="metrics-strip">
       <div class="metric-item">
-        <span class="metric-value">50</span>
+        <span class="metric-value">6</span>
+        <span class="metric-label">Curriculum Courses</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-value">50+</span>
         <span class="metric-label">Curated Problems</span>
       </div>
       <div class="metric-item">
         <span class="metric-value">KaTeX</span>
-        <span class="metric-label">Math Engine</span>
+        <span class="metric-label">Formula Engine</span>
       </div>
       <div class="metric-item">
         <span class="metric-value">Gemini Flash</span>
         <span class="metric-label">Cognitive AI Tutor</span>
-      </div>
-      <div class="metric-item">
-        <span class="metric-value">0ms</span>
-        <span class="metric-label">Local Client Speed</span>
       </div>
     </div>
   </section>
@@ -91,11 +96,11 @@
         <kbd class="search-shortcut" title="Press / to focus search">/</kbd>
       </div>
 
-      <div class="category-pills" role="tablist" aria-label="Filter courses by department">
+      <div class="category-pills" role="tablist" aria-label="Filter courses by curriculum">
         <button type="button" class="category-btn active" data-category="all">All Courses</button>
-        <button type="button" class="category-btn" data-category="ai">Artificial Intelligence</button>
-        <button type="button" class="category-btn" data-category="theory">Theory &amp; Logic</button>
-        <button type="button" class="category-btn" data-category="se">Software Engineering</button>
+        <button type="button" class="category-btn" data-category="cs">Computer Science &amp; AI</button>
+        <button type="button" class="category-btn" data-category="math">Mathematics</button>
+        <button type="button" class="category-btn" data-category="writing">Technical Writing</button>
       </div>
     </div>
   </section>
@@ -105,9 +110,9 @@
     <div class="section-label-row">
       <span class="section-label">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
-        Available Examination Studios
+        Course Reviewer Directory
       </span>
-      <span id="visible-courses-count" class="course-count-badge">3 available</span>
+      <span id="visible-courses-count" class="course-count-badge">6 available</span>
     </div>
 
     <div class="courses-grid">
@@ -117,8 +122,8 @@
                data-course-id="mcs306" 
                data-code="MCS 306" 
                data-title="Introduction to Artificial Intelligence" 
-               data-tags="ai agents search heuristics alpha-beta adversarial csp logic proposition resolution katex gemini" 
-               data-category="ai">
+               data-tags="ai agents search heuristics alpha-beta adversarial csp logic proposition first-order resolution katex gemini flash" 
+               data-category="cs">
         <div class="card-top">
           <div class="course-badge-wrap">
             <span class="course-code-pill">MCS 306</span>
@@ -134,7 +139,7 @@
 
         <h2 class="card-title">Introduction to Artificial Intelligence</h2>
         <p class="card-desc">
-          Comprehensive Midterm Active Recall Studio based on Russell &amp; Norvig. Covers rational agents, uninformed &amp; informed graph search, Alpha-Beta pruning, CSPs, and formal First-Order logic.
+          Comprehensive Midterm Active Recall Studio based on Russell &amp; Norvig. Rational agents, graph search algorithms, Alpha-Beta pruning, CSPs, and formal logic.
         </p>
 
         <div class="card-feature-tags">
@@ -153,52 +158,16 @@
         </div>
       </article>
 
-      <!-- Card 2: MCS 304 (UPCOMING) -->
+      <!-- Card 2: MCS 305 (IN CURATION) -->
       <article class="course-card" 
-               data-course-id="mcs304" 
-               data-code="MCS 304" 
-               data-title="Theory of Computation & Automata" 
-               data-tags="automata dfa nfa regular expressions pumping lemma cfg turing machines decidability" 
-               data-category="theory">
+               data-course-id="mcs305" 
+               data-code="MCS 305" 
+               data-title="Software Engineering" 
+               data-tags="software engineering agile scrum sdlc design patterns solid mvc clean architecture automated testing ci cd" 
+               data-category="cs">
         <div class="card-top">
           <div class="course-badge-wrap">
-            <span class="course-code-pill upcoming">MCS 304</span>
-            <span class="status-badge in-progress">In Curation</span>
-          </div>
-          <div class="card-icon-box" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-          </div>
-        </div>
-
-        <h2 class="card-title">Theory of Computation &amp; Automata</h2>
-        <p class="card-desc">
-          Formal state machines, Deterministic &amp; Non-deterministic Finite Automata, Regular Languages, Pumping Lemma proofs, Context-Free Grammars, and Turing Decidability.
-        </p>
-
-        <div class="card-feature-tags">
-          <span class="tag-pill">State Machines</span>
-          <span class="tag-pill">Proof Verifier</span>
-          <span class="tag-pill">Upcoming</span>
-        </div>
-
-        <div class="card-footer">
-          <span class="card-meta-stat">Midterm Deck</span>
-          <button type="button" class="btn-disabled" disabled aria-disabled="true">
-            <span>Coming Soon</span>
-          </button>
-        </div>
-      </article>
-
-      <!-- Card 3: CS 301 (UPCOMING) -->
-      <article class="course-card" 
-               data-course-id="cs301" 
-               data-code="CS 301" 
-               data-title="Software Engineering & System Architecture" 
-               data-tags="software engineering design patterns solid uml architectural styles ci/cd agile" 
-               data-category="se">
-        <div class="card-top">
-          <div class="course-badge-wrap">
-            <span class="course-code-pill upcoming">CS 301</span>
+            <span class="course-code-pill upcoming">MCS 305</span>
             <span class="status-badge in-progress">In Curation</span>
           </div>
           <div class="card-icon-box" aria-hidden="true">
@@ -206,38 +175,277 @@
           </div>
         </div>
 
-        <h2 class="card-title">Software Engineering &amp; Architecture</h2>
+        <h2 class="card-title">Software Engineering</h2>
         <p class="card-desc">
-          System design patterns, SOLID principles, Clean Architecture, UML diagramming drills, requirements engineering, automated test suites, and Agile workflow analysis.
+          Software development lifecycles, Agile/Scrum methodologies, requirements engineering, architectural design patterns, testing strategies, and CI/CD pipelines.
         </p>
 
         <div class="card-feature-tags">
+          <span class="tag-pill">Agile &amp; Scrum</span>
           <span class="tag-pill">Design Patterns</span>
-          <span class="tag-pill">Architecture Drills</span>
-          <span class="tag-pill">Upcoming</span>
+          <span class="tag-pill">System Architecture</span>
+          <span class="tag-pill">Testing Drills</span>
         </div>
 
         <div class="card-footer">
           <span class="card-meta-stat">Midterm Deck</span>
           <button type="button" class="btn-disabled" disabled aria-disabled="true">
-            <span>Coming Soon</span>
+            <span>In Curation</span>
           </button>
         </div>
       </article>
 
-      <!-- Card 4: How to Add More Courses -->
+      <!-- Card 3: MAT 304a (IN CURATION) -->
+      <article class="course-card" 
+               data-course-id="mat304a" 
+               data-code="MAT 304a" 
+               data-title="Operations Research" 
+               data-tags="operations research linear programming simplex method duality sensitivity analysis transportation assignment optimization" 
+               data-category="math">
+        <div class="card-top">
+          <div class="course-badge-wrap">
+            <span class="course-code-pill upcoming">MAT 304a</span>
+            <span class="status-badge in-progress">In Curation</span>
+          </div>
+          <div class="card-icon-box" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+        </div>
+
+        <h2 class="card-title">Operations Research</h2>
+        <p class="card-desc">
+          Mathematical optimization models, Linear Programming formulation, Simplex method algorithms, duality theory, sensitivity analysis, and transportation matrices.
+        </p>
+
+        <div class="card-feature-tags">
+          <span class="tag-pill">Linear Programming</span>
+          <span class="tag-pill">Simplex Algorithm</span>
+          <span class="tag-pill">Duality Theory</span>
+          <span class="tag-pill">Optimization</span>
+        </div>
+
+        <div class="card-footer">
+          <span class="card-meta-stat">Midterm Deck</span>
+          <button type="button" class="btn-disabled" disabled aria-disabled="true">
+            <span>In Curation</span>
+          </button>
+        </div>
+      </article>
+
+      <!-- Card 4: MAT 301 (PLANNED) -->
+      <article class="course-card" 
+               data-course-id="mat301" 
+               data-code="MAT 301" 
+               data-title="Advanced Calculus 1" 
+               data-tags="advanced calculus real analysis sequences series supremum infimum bolzano weierstrass cauchy limits continuity metric spaces" 
+               data-category="math">
+        <div class="card-top">
+          <div class="course-badge-wrap">
+            <span class="course-code-pill upcoming">MAT 301</span>
+            <span class="status-badge planned">Planned</span>
+          </div>
+          <div class="card-icon-box" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
+          </div>
+        </div>
+
+        <h2 class="card-title">Advanced Calculus 1</h2>
+        <p class="card-desc">
+          Rigorous real analysis: supremum/infimum, sequences and series of real numbers, Bolzano-Weierstrass theorem, Cauchy sequences, and continuity on metric spaces.
+        </p>
+
+        <div class="card-feature-tags">
+          <span class="tag-pill">Real Analysis</span>
+          <span class="tag-pill">Sequences &amp; Series</span>
+          <span class="tag-pill">Cauchy Proofs</span>
+          <span class="tag-pill">Metric Spaces</span>
+        </div>
+
+        <div class="card-footer">
+          <span class="card-meta-stat">Midterm Deck</span>
+          <button type="button" class="btn-disabled" disabled aria-disabled="true">
+            <span>Planned</span>
+          </button>
+        </div>
+      </article>
+
+      <!-- Card 5: MAT 302 (PLANNED) -->
+      <article class="course-card" 
+               data-course-id="mat302" 
+               data-code="MAT 302" 
+               data-title="Modern Geometry" 
+               data-tags="modern geometry euclidean non-euclidean hilbert axioms isometries transformational geometry hyperbolic curvature" 
+               data-category="math">
+        <div class="card-top">
+          <div class="course-badge-wrap">
+            <span class="course-code-pill upcoming">MAT 302</span>
+            <span class="status-badge planned">Planned</span>
+          </div>
+          <div class="card-icon-box" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+        </div>
+
+        <h2 class="card-title">Modern Geometry</h2>
+        <p class="card-desc">
+          Axiomatic Euclidean foundation, Hilbert's axioms, non-Euclidean geometries, transformational geometry, isometries, hyperbolic plane, and curvature models.
+        </p>
+
+        <div class="card-feature-tags">
+          <span class="tag-pill">Axiomatic Systems</span>
+          <span class="tag-pill">Non-Euclidean</span>
+          <span class="tag-pill">Isometries</span>
+          <span class="tag-pill">Hyperbolic Plane</span>
+        </div>
+
+        <div class="card-footer">
+          <span class="card-meta-stat">Midterm Deck</span>
+          <button type="button" class="btn-disabled" disabled aria-disabled="true">
+            <span>Planned</span>
+          </button>
+        </div>
+      </article>
+
+      <!-- Card 6: TWM 301 (PLANNED) -->
+      <article class="course-card" 
+               data-course-id="twm301" 
+               data-code="TWM 301" 
+               data-title="Technical Writing in Mathematics" 
+               data-tags="technical writing mathematics latex typesetting bibtex theorem lemma proofs academic publishing scientific papers" 
+               data-category="writing">
+        <div class="card-top">
+          <div class="course-badge-wrap">
+            <span class="course-code-pill upcoming">TWM 301</span>
+            <span class="status-badge planned">Planned</span>
+          </div>
+          <div class="card-icon-box" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </div>
+        </div>
+
+        <h2 class="card-title">Technical Writing in Mathematics</h2>
+        <p class="card-desc">
+          Mathematical typesetting with LaTeX, theorem-proof exposition, structural clarity, mathematical terminology precision, scientific formatting, and BibTeX management.
+        </p>
+
+        <div class="card-feature-tags">
+          <span class="tag-pill">LaTeX Typesetting</span>
+          <span class="tag-pill">Proof Exposition</span>
+          <span class="tag-pill">BibTeX</span>
+          <span class="tag-pill">Scientific Reports</span>
+        </div>
+
+        <div class="card-footer">
+          <span class="card-meta-stat">Midterm Deck</span>
+          <button type="button" class="btn-disabled" disabled aria-disabled="true">
+            <span>Planned</span>
+          </button>
+        </div>
+      </article>
+
+      <!-- Card 7: Add Course helper -->
       <aside class="course-card contribute-card" aria-label="Add courses information">
         <div class="contribute-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
         </div>
-        <h2 class="contribute-title">Want to add another course?</h2>
+        <h2 class="contribute-title">Adding More Courses?</h2>
         <p class="contribute-text">
-          Simply add a new folder (e.g. <code style="font-family: var(--font-mono); color: var(--accent-teal);">cs101/</code>) with an <code style="font-family: var(--font-mono); color: var(--accent-teal);">index.html</code> and questions bank. Vercel automatically deploys it!
+          Add a folder (e.g. <code style="font-family: var(--font-mono); color: var(--accent-teal);">mat304a/</code>) with an <code style="font-family: var(--font-mono); color: var(--accent-teal);">index.html</code> and questions bank. Vercel automatically deploys it!
         </p>
       </aside>
 
     </div>
   </main>
+
+  <!-- ======================================================================
+       API Key Guide Section on Hub
+       ====================================================================== -->
+  <section class="api-guide-section" id="api-guide" aria-labelledby="api-guide-heading">
+    <div class="guide-banner-card">
+      <div class="guide-header-block">
+        <span class="guide-badge-pill">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          Quick Setup · 100% Free
+        </span>
+        <h2 id="api-guide-heading" class="guide-title">
+          How to Get Your Free Google Gemini AI Key
+        </h2>
+        <p class="guide-subtitle">
+          Enable personalized cognitive tutoring, step-by-step mathematical breakdowns, and instant problem explanations in under 60 seconds with zero cost.
+        </p>
+      </div>
+
+      <!-- Step Cards Grid -->
+      <div class="guide-steps-grid">
+        <div class="guide-step-card">
+          <div class="guide-step-num">1</div>
+          <h3 class="guide-step-heading">Sign In to AI Studio</h3>
+          <p class="guide-step-desc">
+            Go to Google's official developer console at <strong>aistudio.google.com/app/apikey</strong> and sign in using your regular Google account.
+          </p>
+        </div>
+
+        <div class="guide-step-card">
+          <div class="guide-step-num">2</div>
+          <h3 class="guide-step-heading">Click "Create API Key"</h3>
+          <p class="guide-step-desc">
+            Inside the AI Studio dashboard, locate and click the blue <strong>"Create API key"</strong> button in the top navigation.
+          </p>
+        </div>
+
+        <div class="guide-step-card">
+          <div class="guide-step-num">3</div>
+          <h3 class="guide-step-heading">Generate Key</h3>
+          <p class="guide-step-desc">
+            Select an existing Google Cloud project or click <strong>"Create API key in new project"</strong>. No credit card or billing is required.
+          </p>
+        </div>
+
+        <div class="guide-step-card">
+          <div class="guide-step-num">4</div>
+          <h3 class="guide-step-heading">Paste &amp; Save</h3>
+          <p class="guide-step-desc">
+            Copy your key, click <strong>"Gemini AI Key"</strong> above, and paste it. It is saved in your browser and shared across all course reviewers.
+          </p>
+        </div>
+      </div>
+
+      <!-- Informational Callouts -->
+      <div class="guide-callouts-grid">
+        <div class="guide-callout-card">
+          <div class="guide-callout-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          </div>
+          <div>
+            <div class="guide-callout-title">100% Free Quota</div>
+            <div class="guide-callout-text">Gemini 3.6 Flash free tier includes up to 15 requests per minute and 1,500 requests per day — more than enough for daily review.</div>
+          </div>
+        </div>
+
+        <div class="guide-callout-card">
+          <div class="guide-callout-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div>
+            <div class="guide-callout-title">Client-Side Privacy</div>
+            <div class="guide-callout-text">Your key is stored only in your browser's <code style="font-family: var(--font-mono); color: var(--accent-teal);">localStorage</code> and sent directly to Google's API. No third-party server ever sees it.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="guide-footer-actions">
+        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="btn-guide-primary">
+          <span>Open Google AI Studio Console</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+        <button type="button" id="btn-open-api-from-guide" class="btn-guide-secondary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>Enter Saved Key Now</span>
+        </button>
+      </div>
+    </div>
+  </section>
 
   <!-- Shared Gemini API Key Modal -->
   <div id="api-setup-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-api-title" aria-hidden="true">
@@ -263,7 +471,7 @@
             100% Free &amp; Client-Side
           </div>
           <p>
-            You can generate a free key in under a minute at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" style="color: var(--accent-teal); text-decoration: underline;">Google AI Studio</a>. No credit card required. Free tier includes 1,500 free requests per day.
+            Generate your free key in under a minute at <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="color: var(--accent-teal); text-decoration: underline;">Google AI Studio</a>. No credit card required. Free tier includes 1,500 requests per day.
           </p>
         </div>
 
@@ -285,11 +493,12 @@
   <footer class="site-footer" role="contentinfo">
     <div class="footer-container">
       <p class="footer-credits">
-        StudyHub &middot; Built for students and study groups. Zero tracking &middot; 100% Client-Side.
+        StudyHub &middot; 3rd Year Midterm Reviewers &middot; Zero tracking &middot; 100% Client-Side.
       </p>
       <nav class="footer-links" aria-label="Footer Links">
         <a href="./mcs306/" class="footer-link">MCS 306 Reviewer</a>
-        <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" class="footer-link">Get Free Gemini Key</a>
+        <a href="#api-guide" class="footer-link">API Key Guide</a>
+        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="footer-link">Get Free Gemini Key</a>
       </nav>
     </div>
   </footer>
