@@ -142,8 +142,8 @@
       return;
     }
 
-    if (!key.startsWith('AIza') || key.length < 25) {
-      showToast('⚠️ Please verify your key (typically begins with AIza...)');
+    if (key.length < 8) {
+      showToast('⚠️ Please enter a valid Gemini API key');
       return;
     }
 
@@ -161,6 +161,9 @@
       loadSavedApiKey();
       modalBackdrop.classList.add('active');
       modalBackdrop.setAttribute('aria-hidden', 'false');
+      if (apiKeyInput) {
+        setTimeout(() => apiKeyInput.focus(), 50);
+      }
     }
   }
 
@@ -174,6 +177,14 @@
   if (btnOpenModal) btnOpenModal.addEventListener('click', openModal);
   if (btnCloseModal) btnCloseModal.addEventListener('click', closeModal);
   if (btnSaveKey) btnSaveKey.addEventListener('click', saveApiKey);
+  if (apiKeyInput) {
+    apiKeyInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        saveApiKey();
+      }
+    });
+  }
 
   if (modalBackdrop) {
     modalBackdrop.addEventListener('click', (e) => {
