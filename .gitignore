@@ -1,6 +1,23 @@
-.agent/
+# Operating System & Editor files
 .DS_Store
 Thumbs.db
 *.log
 .env*
 node_modules/
+.vscode/
+.idea/
+
+# Agent & AI development workspaces
+.agent/
+.gemini/
+
+# Internal development prompts & specifications
+prompts/
+*/prompts/
+project_specification.md
+
+# Raw study material sources and dumps (PDFs, text dumps, extraction JSONs)
+*.pdf
+*.content.txt
+*.json
+!vercel.json
