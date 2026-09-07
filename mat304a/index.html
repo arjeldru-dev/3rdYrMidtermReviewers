@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Cognitive Operations Research Reviewer & Active Recall Studio for MAT 304a (Linear Programming, Simplex Methods, Sensitivity Analysis).">
+  <title>MAT 304a · Operations Research Midterm Reviewer | Cognitive Active Recall Studio</title>
+
+  <!-- Google Fonts Preconnect & High-Performance Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
+  <!-- KaTeX High-Performance Math Typesetting -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+
+  <!-- Core Design Tokens & Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Global Fixed Theme Switcher (Accessible across all screens) -->
+  <button type="button" id="btn-theme-toggle" class="theme-toggle-btn" aria-label="Toggle Light / Dark theme" title="Toggle visual theme">
+    <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4"/>
+      <path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+    </svg>
+    <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+    </svg>
+  </button>
+
+  <!-- Sticky Quiz & Review Progress Header -->
+  <header id="quiz-header" class="hidden" aria-label="Quiz Progress Header">
+    <div class="header-inner">
+      <div class="header-top-row">
+        <div class="header-brand">
+          <a href="../" class="header-hub-link" title="Return to All Courses Hub" aria-label="Return to All Courses Hub">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+          </a>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect width="18" height="18" x="3" y="3" rx="2"/>
+            <path d="M9 3v18"/>
+            <path d="M14 9l3 3-3 3"/>
+          </svg>
+          <span class="header-brand-full">MAT 304a · Operations Research Reviewer</span>
+          <span class="header-brand-short">MAT 304a</span>
+        </div>
+        <div class="header-stats">
+          <span id="header-difficulty-badge" class="header-difficulty-pill">Easy</span>
+          <span id="header-counter" class="header-counter">Question 1 of 70</span>
+          <span id="header-score" class="header-score">Score: 0 / 0</span>
+        </div>
+      </div>
+      <div class="progress-track" role="progressbar" aria-label="Quiz completion progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+        <div id="quiz-progress-bar" class="progress-fill" style="width: 0%;"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Container -->
+  <main id="app-container">
+
+    <!-- ====================================================================
+         Screen 1: Welcome & Setup Screen (Active on initial load)
+         ==================================================================== -->
+    <section id="welcome-screen" class="screen active" aria-labelledby="welcome-heading">
+      <div class="welcome-hero">
+        <div class="welcome-top-nav">
+          <a href="../" class="hub-back-btn" title="Return to Course Reviewers Hub">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+            <span>All Courses Hub</span>
+          </a>
+        </div>
+        <span class="badge badge-university">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="m9 12 2 2 4-4"/>
+          </svg>
+          MAT 304a · Academic Examination Suite
+        </span>
+        <h1 id="welcome-heading">MAT 304a: Operations Research I</h1>
+        <p class="welcome-lead">High-Yield Midterm Active Recall Studio & Linear Programming Practice Suite</p>
+
+        <!-- AI Domain Pill Cloud -->
+        <div class="domain-cloud" aria-label="Covered Operations Research syllabus topics">
+          <span class="domain-pill">OR & LP Foundations</span>
+          <span class="domain-pill">LP Model Formulation</span>
+          <span class="domain-pill">Graphical Solution</span>
+          <span class="domain-pill">Sensitivity & Shadow Prices</span>
+          <span class="domain-pill">Simplex Tableaux</span>
+          <span class="domain-pill">Special Cases & Degeneracy</span>
+          <span class="domain-pill">Big-M & Two-Phase</span>
+        </div>
+      </div>
+
+      <!-- Exam Telemetry Dossier -->
+      <article class="instructions-box" aria-labelledby="briefing-heading">
+        <h3 id="briefing-heading">Midterm Review Protocol & Syllabus Architecture</h3>
+        <div class="briefing-grid">
+          <div class="briefing-item">
+            <div class="briefing-item-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+              70 Curated Problems
+            </div>
+            <p class="briefing-item-desc">Exhaustive problem bank covering all 7 midterm syllabus modules: LP model formulation, graphical solutions, sensitivity analysis, simplex tableaux, degeneracy/unboundedness, Big-M, and two-phase simplex.</p>
+          </div>
+
+          <div class="briefing-item">
+            <div class="briefing-item-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m10 15 5-3-5-3v6Z"/></svg>
+              Active Recall Retrieval
+            </div>
+            <p class="briefing-item-desc">Formulate and justify your solution internally before confirming. True retention happens during effortful cognitive retrieval.</p>
+          </div>
+
+          <div class="briefing-item">
+            <div class="briefing-item-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+              Algorithmic Scratchpad
+            </div>
+            <p class="briefing-item-desc">Keep scratch paper handy to formulate constraints, calculate minimum ratios $\theta = \min \{b_i / a_{ik}\}$, pivot simplex tableaux, and verify shadow prices.</p>
+          </div>
+
+          <div class="briefing-item">
+            <div class="briefing-item-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+              Neural Tutor Co-Pilot
+            </div>
+            <p class="briefing-item-desc">Equip a Gemini API key to receive instant, step-by-step Operations Research explanations refuting distractors and proving mathematical simplex derivations.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Configuration Vault Card -->
+      <div id="settings-panel" class="card settings-card">
+        <div class="settings-title">
+          <span>Session Parameters</span>
+          <span class="text-xs text-muted" style="font-family: var(--font-mono); font-weight: normal;">SYSTEM // CONFIG</span>
+        </div>
+
+        <!-- Gemini API Key Input -->
+        <div class="form-group">
+          <div class="form-label-row">
+            <label for="api-key-input" class="form-label">Google Gemini API Key (Optional)</label>
+            <button type="button" id="btn-open-api-guide" class="btn-guide-link" aria-haspopup="dialog" aria-controls="api-key-guide-modal" title="View step-by-step guide to get a free API key">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+              <span>How to get Gemini 3.6 API Key?</span>
+            </button>
+          </div>
+          <div class="input-wrapper">
+            <input 
+              type="password" 
+              id="api-key-input" 
+              class="form-input" 
+              placeholder="Paste your Gemini API key here... (Unlocks step-by-step neural tutoring)" 
+              autocomplete="off"
+              spellcheck="false"
+            >
+            <button type="button" id="btn-toggle-api-key" class="input-toggle-btn" aria-label="Toggle API Key visibility">Show</button>
+          </div>
+          <div class="api-key-helper-row">
+            <span class="form-helper" id="api-key-helper">Stored securely in local client storage. Zero server intermediary.</span>
+            <button type="button" id="btn-open-api-guide-text" class="link-inline-guide">Need a free key? Follow setup guide &rarr;</button>
+          </div>
+        </div>
+
+        <!-- Difficulty Mode Selector -->
+        <div class="form-group difficulty-form-group">
+          <div class="difficulty-header-row">
+            <label class="form-label" id="difficulty-group-label" style="margin-bottom: 0;">Evaluation Difficulty Mode</label>
+            <span class="text-xs text-muted" style="font-family: var(--font-mono);">CHALLENGE LEVEL</span>
+          </div>
+          <span class="form-helper" style="margin-top: 4px; margin-bottom: var(--spacing-sm);">Select challenge parameters to prevent rote memorization of question sequences or choice letters:</span>
+
+          <div class="difficulty-grid" role="radiogroup" aria-labelledby="difficulty-group-label">
+            <!-- Easy Mode -->
+            <label class="difficulty-card active" for="diff-easy">
+              <input type="radio" name="difficulty-choice" id="diff-easy" value="easy" checked>
+              <div class="difficulty-card-content">
+                <div class="diff-title-row">
+                  <span class="diff-badge diff-badge-easy">Easy</span>
+                  <span class="diff-icon-symbol">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <line x1="8" y1="6" x2="21" y2="6"></line>
+                      <line x1="8" y1="12" x2="21" y2="12"></line>
+                      <line x1="8" y1="18" x2="21" y2="18"></line>
+                      <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                      <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                      <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                    </svg>
+                    <span>1 &rarr; 70</span>
+                  </span>
+                </div>
+                <div class="diff-name">Standard Material</div>
+                <p class="diff-desc">Original sequence &amp; original choices A–D. Aligned directly with source reviewer document.</p>
+              </div>
+            </label>
+
+            <!-- Medium Mode -->
+            <label class="difficulty-card" for="diff-medium">
+              <input type="radio" name="difficulty-choice" id="diff-medium" value="medium">
+              <div class="difficulty-card-content">
+                <div class="diff-title-row">
+                  <span class="diff-badge diff-badge-medium">Medium</span>
+                  <span class="diff-icon-symbol">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polyline points="16 3 21 3 21 8"></polyline>
+                      <line x1="4" y1="20" x2="21" y2="3"></line>
+                      <polyline points="21 16 21 21 16 21"></polyline>
+                      <line x1="15" y1="15" x2="21" y2="21"></line>
+                      <line x1="4" y1="4" x2="9" y2="9"></line>
+                    </svg>
+                    <span>Questions</span>
+                  </span>
+                </div>
+                <div class="diff-name">Shuffled Questions</div>
+                <p class="diff-desc">Fisher-Yates randomized question sequence while keeping option choices in original order.</p>
+              </div>
+            </label>
+
+            <!-- Hard Mode -->
+            <label class="difficulty-card" for="diff-hard">
+              <input type="radio" name="difficulty-choice" id="diff-hard" value="hard">
+              <div class="difficulty-card-content">
+                <div class="diff-title-row">
+                  <span class="diff-badge diff-badge-hard">Hard</span>
+                  <span class="diff-icon-symbol">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                    <span>Questions + Choices</span>
+                  </span>
+                </div>
+                <div class="diff-name">Full Permutation</div>
+                <p class="diff-desc">Randomized question order <strong>AND</strong> scrambled choice letters (A–D). Tests pure concept mastery.</p>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Start Action Button -->
+      <div class="text-center">
+        <button type="button" id="btn-start-quiz" class="btn btn-primary btn-lg btn-block">
+          <span>Launch Midterm Review Session</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         Screen 2: Active Quiz Question Screen
+         ==================================================================== -->
+    <section id="quiz-screen" class="screen" aria-labelledby="quiz-question-text">
+      <!-- Question Card -->
+      <article class="card question-card">
+        <div class="question-header-row">
+          <div class="question-meta-group">
+            <span id="quiz-topic-badge" class="badge badge-topic">Topic Name</span>
+            <span id="quiz-question-index-label" class="text-xs text-muted" style="font-family: var(--font-mono);">Question #</span>
+          </div>
+          <div class="keyboard-hint-pill" title="Keyboard selection supported">
+            <span>Keys:</span>
+            <kbd>1-4</kbd> / <kbd>A-D</kbd>
+          </div>
+        </div>
+
+        <!-- Question Stem -->
+        <p id="quiz-question-text" class="question-stem">Question text loading...</p>
+
+        <!-- 4 Choices Grid (a, b, c, d) -->
+        <div id="quiz-choices-grid" class="choices-grid" role="radiogroup" aria-label="Answer options">
+          <!-- Populated dynamically by JavaScript -->
+        </div>
+
+        <!-- Action Bar: Submit Answer Button -->
+        <div class="quiz-actions">
+          <button type="button" id="btn-submit-answer" class="btn btn-primary hidden">
+            <span>Submit Verification</span>
+            <kbd style="background: rgba(0,0,0,0.25); border-color: rgba(0,0,0,0.3); color: #070A10; margin-left: 4px;">Enter ↵</kbd>
+          </button>
+        </div>
+      </article>
+
+      <!-- Feedback Panel (Shown immediately after submitting answer) -->
+      <section id="feedback-panel" class="feedback-panel hidden" aria-live="polite">
+        <div class="feedback-header">
+          <div id="feedback-status" class="feedback-status">
+            <!-- Populated dynamically with SVG icon and status label -->
+          </div>
+          <div id="feedback-correct-answer" class="feedback-correct-callout">
+            <!-- Shows correct answer when incorrect -->
+          </div>
+        </div>
+
+        <!-- Gemini AI Explanation Box -->
+        <div id="ai-explanation-box" class="ai-explanation-box">
+          <div class="ai-explanation-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+            </svg>
+            <span>Neural AI Professor · Resolution & Proof</span>
+          </div>
+
+          <!-- Content container: skeleton loader or text -->
+          <div id="ai-explanation-content" class="ai-explanation-content">
+            <div class="skeleton-loader">
+              <div class="skeleton-line w-80"></div>
+              <div class="skeleton-line w-90"></div>
+              <div class="skeleton-line w-60"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Next Question Navigation Button -->
+        <div class="text-right">
+          <button type="button" id="btn-next-question" class="btn btn-primary">
+            <span>Advance to Next Problem</span>
+            <kbd style="background: rgba(0,0,0,0.25); border-color: rgba(0,0,0,0.3); color: #070A10; margin-left: 4px;">Enter ↵</kbd>
+          </button>
+        </div>
+      </section>
+    </section>
+
+    <!-- ====================================================================
+         Screen 3: Results & Analytics Screen
+         ==================================================================== -->
+    <section id="results-screen" class="screen" aria-labelledby="results-title">
+      <div class="card score-hero results-hero">
+        <h2 id="results-title" class="text-xs text-muted" style="text-transform: uppercase; letter-spacing: 0.08em; font-family: var(--font-mono); font-weight: 600; margin-bottom: 12px;">Evaluation Telemetry Report</h2>
+        <div id="results-score" class="results-score-display">0 / 50</div>
+        <div id="results-percentage" class="results-percentage">0% Accuracy</div>
+        <div id="results-grade" class="badge results-grade-badge">Pending Evaluation</div>
+        <div id="results-difficulty-tag" class="results-difficulty-tag" style="margin-top: 10px;">
+          <span class="badge badge-difficulty">Mode: Easy (Standard)</span>
+        </div>
+        <p id="results-message" class="text-secondary" style="margin-top: 16px; max-width: 520px; margin-left: auto; margin-right: auto; line-height: 1.55;"></p>
+      </div>
+
+      <!-- Topic Mastery Breakdown -->
+      <section class="card topic-breakdown-card" aria-labelledby="topic-breakdown-heading">
+        <h3 id="topic-breakdown-heading" style="margin-bottom: 6px;">Syllabus Mastery Analytics</h3>
+        <p class="text-sm text-secondary" style="margin-bottom: var(--spacing-md);">Pinpoint conceptual strengths and reinforce weaker topics prior to exam day.</p>
+        <div id="topic-breakdown-list">
+          <!-- Populated dynamically by JavaScript -->
+        </div>
+      </section>
+
+      <!-- Results Action Buttons -->
+      <div class="results-actions">
+        <button type="button" id="btn-review-mistakes" class="btn btn-secondary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          <span>Review Missed Problems</span>
+        </button>
+        <button type="button" id="btn-restart-quiz" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="1 4 1 10 7 10"/>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+          </svg>
+          <span>Retake Full Reviewer</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         Screen 4: Mistake Review Screen
+         ==================================================================== -->
+    <section id="review-screen" class="screen" aria-labelledby="review-title">
+      <div class="review-header">
+        <h2 id="review-title">Questions You Missed</h2>
+        <p class="text-secondary">Examine the discrepancy between your submitted selection, the formal solution, and the AI explanation.</p>
+      </div>
+
+      <!-- List of missed question cards -->
+      <div id="missed-questions-list" class="missed-list">
+        <!-- Populated dynamically by JavaScript -->
+      </div>
+
+      <div class="text-center" style="margin-top: var(--spacing-xl);">
+        <button type="button" id="btn-back-to-results" class="btn btn-secondary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          <span>Back to Performance Summary</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Institutional Footer -->
+  <footer>
+    <p>MAT 304a: Operations Research I · Midterm Examination Reviewer</p>
+    <p class="text-xs text-muted" style="margin-top: 4px; font-family: var(--font-mono);">Active Recall & Cognitive Tutoring Environment</p>
+  </footer>
+
+  <!-- ====================================================================
+       Google Gemini 3.6 API Key Step-by-Step Guide Modal
+       ==================================================================== -->
+  <div id="api-key-guide-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="guide-modal-title" aria-hidden="true">
+    <div class="modal-dialog card" role="document">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="badge badge-university" style="margin-bottom: 4px;">Google AI Studio · Quick Guide</span>
+          <h2 id="guide-modal-title" class="modal-title">How to Get Google Gemini 3.6 API Key</h2>
+        </div>
+        <button type="button" id="btn-close-guide-modal" class="btn-close-modal" aria-label="Close API Key Guide">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-lead">Google provides free access to Gemini API for developers, researchers, and students. You can generate a personal API key in about 60 seconds with no credit card required:</p>
+
+        <!-- Step List -->
+        <ol class="guide-steps-list">
+          <li class="guide-step-item">
+            <div class="step-badge">1</div>
+            <div class="step-content">
+              <h4>Sign in to Google AI Studio</h4>
+              <p>Go to Google's official developer console at <strong style="color: var(--text-primary);">aistudio.google.com/app/apikey</strong> and sign in using your standard Google or university account.</p>
+              <div class="step-action">
+                <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm link-btn-external">
+                  <span>Open Google AI Studio Console</span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="guide-step-item">
+            <div class="step-badge">2</div>
+            <div class="step-content">
+              <h4>Click "Create API Key"</h4>
+              <p>Once inside the dashboard, locate and click the <strong style="color: var(--text-primary);">"Create API key"</strong> button.</p>
+            </div>
+          </li>
+
+          <li class="guide-step-item">
+            <div class="step-badge">3</div>
+            <div class="step-content">
+              <h4>Select Project &amp; Create Key</h4>
+              <p>In the popup dialog, choose your project from the drop-down menu, then click the <strong style="color: var(--text-primary);">"Create key"</strong> button. The free tier is automatically enabled with zero payment info needed.</p>
+            </div>
+          </li>
+
+          <li class="guide-step-item">
+            <div class="step-badge">4</div>
+            <div class="step-content">
+              <h4>Copy Your Key &amp; Paste in Reviewer</h4>
+              <p>Click the copy icon to copy your generated key string. Return here and paste it into the <strong>Google Gemini API Key</strong> input box on the welcome screen.</p>
+            </div>
+          </li>
+        </ol>
+
+        <!-- Informational Callouts Grid -->
+        <div class="guide-notes-grid">
+          <div class="guide-note-card">
+            <div class="guide-note-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+              <span>100% Free Quota</span>
+            </div>
+            <p>Gemini 3.6 Flash free tier grants up to 15 requests per minute and 1,500 requests per day — plenty for completing all 70 questions multiple times.</p>
+          </div>
+
+          <div class="guide-note-card">
+            <div class="guide-note-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span>Client-Side Security</span>
+            </div>
+            <p>Your API key is saved exclusively in your device's local browser storage (<code class="formula">localStorage</code>) and communicates directly with Google's endpoint. No third-party server ever sees your key.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" id="btn-dismiss-guide-modal" class="btn btn-primary">
+          <span>I've Got It, Back to Setup</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notifications -->
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="data/questions.js"></script>
+  <script src="js/math.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/feedback.js"></script>
+  <script src="js/results.js"></script>
+  <script src="js/review.js"></script>
+
+</body>
+</html>

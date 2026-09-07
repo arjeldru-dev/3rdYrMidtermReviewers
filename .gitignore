@@ -16,8 +16,14 @@ prompts/
 */prompts/
 project_specification.md
 
-# Raw study material sources and dumps (PDFs, text dumps, extraction JSONs)
+# Raw study material sources and dumps (PDFs, PPTs, text dumps, extraction JSONs)
 *.pdf
+*.ppt
+*.pptx
 *.content.txt
+*_content.txt
 *.json
 !vercel.json
+
+# Raw course slide dumps
+mcs305/
