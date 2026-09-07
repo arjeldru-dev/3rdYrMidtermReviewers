@@ -31,13 +31,12 @@ The client uses an adaptive multi-model failover engine with automatic discovery
 | :---: | :--- | :--- | :--- |
 | **1** | **`gemini-2.0-flash`** | Standard Production Flash · 1,500 RPD / 15 RPM Free Tier | **Primary Engine**: High-speed, high-quota academic proofs & explanations |
 | **2** | **`gemini-2.0-flash-lite`** | Lightweight High-Capacity · Ultra-low latency | **First Fallback**: High-throughput tutoring when primary capacity fluctuates |
-| **3** | **`gemini-1.5-flash`** | Standard Production Flash | **High-Capacity Fallback**: Reliable fallback with generous rate limits |
-| **4** | **`gemini-3.6-flash`** | Frontier Preview Tier · Deepest reasoning (20 RPD free cap) | **Deep Reasoning Fallback**: High-complexity conceptual problems |
+| **3** | **`gemini-3.6-flash`** | Frontier Preview Tier · Deepest reasoning (20 RPD free cap) | **Deep Reasoning Fallback**: High-complexity conceptual problems |
 
 ### Architecture & Resilience Highlights
 
 * **Automatic Multi-Model Failover:**
-  $$\text{gemini-2.0-flash} \longrightarrow \text{gemini-2.0-flash-lite} \longrightarrow \text{gemini-1.5-flash} \longrightarrow \text{gemini-3.6-flash}$$
+  $$\text{gemini-2.0-flash} \longrightarrow \text{gemini-2.0-flash-lite} \longrightarrow \text{gemini-3.6-flash}$$
   If a model ever encounters daily quota limits (HTTP 429), bad request parameter mismatches (HTTP 400), or transient server load, the client seamlessly switches to the next available model in the sequence to keep your study session uninterrupted.
 * **Self-Healing Text-Only `ListModels` Auto-Discovery:** If an account or regional endpoint returns an HTTP 404 or 400 for a specific model, the client queries Google's `ModelService.ListModels` API using your key, automatically filters for text-generation models (excluding TTS, audio, and embeddings), and dynamically injects them into the failover chain.
 * **Full Key Compatibility (`AQ.` and `AIza...`):** Automatically injects the required `x-goog-api-key` HTTP header with every request. Fully authenticates both Google's new official `AQ.` Auth Keys and legacy `AIza...` keys.

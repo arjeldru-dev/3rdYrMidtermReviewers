@@ -481,14 +481,19 @@
   }
 
   function saveModelPreference(model) {
-    const valid = (model === 'gemini-1.5-flash' || model === 'gemini-3.6-flash') ? model : 'gemini-2.0-flash';
+    const valid = (model === 'gemini-3.6-flash') ? model : 'gemini-2.0-flash';
     safeSetItem(STORAGE_KEYS.AI_MODEL, valid);
     return valid;
   }
 
   function getModelPreference() {
     const raw = safeGetItem(STORAGE_KEYS.AI_MODEL);
-    if (raw === 'gemini-1.5-flash' || raw === 'gemini-3.6-flash') {
+    if (raw === 'gemini-1.5-flash') {
+      // Auto-migrate legacy 1.5-flash setting to supported 2.0-flash
+      safeSetItem(STORAGE_KEYS.AI_MODEL, 'gemini-2.0-flash');
+      return 'gemini-2.0-flash';
+    }
+    if (raw === 'gemini-3.6-flash') {
       return raw;
     }
     return 'gemini-2.0-flash';
