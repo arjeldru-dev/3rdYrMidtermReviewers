@@ -13,13 +13,19 @@
   'use strict';
 
   const GEMINI_CONFIG = Object.freeze({
-    ENDPOINT: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent',
+    PRIMARY_MODEL: 'gemini-2.0-flash',     // 1,500 RPD, sub-second latency, rigorous reasoning
+    FALLBACK_MODEL: 'gemini-1.5-flash',    // 1,500 RPD, dependable fallback
+    PREVIEW_MODEL: 'gemini-3.6-flash',     // 20 RPD preview
     TEMPERATURE: 0.2,
     MAX_OUTPUT_TOKENS: 8192,
     THINKING_BUDGET: 1024,
     TIMEOUT_MS: 60000,
     RETRY_DELAY_MS: 4000
   });
+
+  function getModelEndpoint(modelName) {
+    return `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelName)}:generateContent`;
+  }
 
   const SYSTEM_PROMPT = `You are an AI professor teaching MCS 306 — Introduction to Artificial Intelligence at a university level (aligned with Stuart Russell and Peter Norvig's Artificial Intelligence: A Modern Approach). A student just answered a multiple-choice question.
 
@@ -87,8 +93,29 @@ Result: ${resultLabel}`;
    * @param {boolean} isCorrect
    * @returns {Object}
    */
-  function buildRequestBody(question, selectedAnswer, isCorrect) {
+  /**
+   * Constructs the JSON body for the Gemini API v1beta generateContent endpoint.
+   * Dynamically tailors generationConfig based on model capability.
+   * @param {Object} question
+   * @param {string} selectedAnswer
+   * @param {boolean} isCorrect
+   * @param {string} [modelName='gemini-2.0-flash']
+   * @returns {Object}
+   */
+  function buildRequestBody(question, selectedAnswer, isCorrect, modelName = GEMINI_CONFIG.PRIMARY_MODEL) {
     const userPayload = formatUserPayload(question, selectedAnswer, isCorrect);
+    const genConfig = {
+      temperature: GEMINI_CONFIG.TEMPERATURE,
+      maxOutputTokens: GEMINI_CONFIG.MAX_OUTPUT_TOKENS
+    };
+
+    // Only apply thinkingConfig to models that officially support thinking budget
+    if (modelName && (modelName.includes('thinking') || modelName.includes('3.6') || modelName.includes('2.5'))) {
+      genConfig.thinkingConfig = {
+        thinkingBudget: GEMINI_CONFIG.THINKING_BUDGET
+      };
+    }
+
     return {
       systemInstruction: {
         parts: [{
@@ -100,18 +127,13 @@ Result: ${resultLabel}`;
           text: userPayload
         }]
       }],
-      generationConfig: {
-        temperature: GEMINI_CONFIG.TEMPERATURE,
-        maxOutputTokens: GEMINI_CONFIG.MAX_OUTPUT_TOKENS,
-        thinkingConfig: {
-          thinkingBudget: GEMINI_CONFIG.THINKING_BUDGET
-        }
-      }
+      generationConfig: genConfig
     };
   }
 
   /**
-   * Fetches an AI explanation from Google Gemini with caching, timeout, and retry.
+   * Fetches an AI explanation from Google Gemini with persistent caching,
+   * multi-key rotation, and intelligent model failover (gemini-2.0-flash -> gemini-1.5-flash).
    * 
    * @param {Object} question - Question data object ({ id, question, choices, answer })
    * @param {string} selectedAnswer - Letter selected by student ('a', 'b', 'c', 'd')
@@ -131,7 +153,7 @@ Result: ${resultLabel}`;
       };
     }
 
-    // 1. Check in-memory session cache first
+    // 1. Check persistent/session cache first (0 network calls, 0 quota used)
     if (global.AppState) {
       const cached = (typeof global.AppState.getExplanation === 'function')
         ? global.AppState.getExplanation(question.id)
@@ -141,26 +163,43 @@ Result: ${resultLabel}`;
       }
     }
 
-    // 2. Validate API key
-    const apiKey = (global.AppState && typeof global.AppState.getApiKey === 'function')
+    // 2. Validate & parse API key pool
+    const rawApiKey = (global.AppState && typeof global.AppState.getApiKey === 'function')
       ? global.AppState.getApiKey()
       : null;
 
-    if (!apiKey || apiKey.trim() === '') {
+    if (!rawApiKey || rawApiKey.trim() === '') {
       return {
         error: 'NO_KEY',
         message: 'Enter your Gemini API key on the welcome screen to enable AI explanations.'
       };
     }
 
-    const trimmedKey = apiKey.trim();
-    const requestBody = buildRequestBody(question, selectedAnswer, isCorrect);
-    const url = `${GEMINI_CONFIG.ENDPOINT}?key=${encodeURIComponent(trimmedKey)}`;
+    // Support comma or whitespace separated keys for automatic rotation
+    const apiKeys = rawApiKey.split(/[,;\s]+/).map(k => k.trim()).filter(k => k.length > 0);
+    if (apiKeys.length === 0) {
+      return {
+        error: 'NO_KEY',
+        message: 'Enter your Gemini API key on the welcome screen to enable AI explanations.'
+      };
+    }
 
-    /**
-     * Internal fetch execution with 30s timeout controller
-     */
-    async function executeRequest(requestUrl = url) {
+    // 3. Determine Model Failover Chain
+    const preferredModel = (global.AppState && typeof global.AppState.getModelPreference === 'function')
+      ? global.AppState.getModelPreference()
+      : GEMINI_CONFIG.PRIMARY_MODEL;
+
+    let modelChain = [GEMINI_CONFIG.PRIMARY_MODEL, GEMINI_CONFIG.FALLBACK_MODEL];
+    if (preferredModel === GEMINI_CONFIG.PREVIEW_MODEL) {
+      modelChain = [GEMINI_CONFIG.PREVIEW_MODEL, GEMINI_CONFIG.PRIMARY_MODEL, GEMINI_CONFIG.FALLBACK_MODEL];
+    } else if (preferredModel === GEMINI_CONFIG.FALLBACK_MODEL) {
+      modelChain = [GEMINI_CONFIG.FALLBACK_MODEL, GEMINI_CONFIG.PRIMARY_MODEL];
+    }
+
+    let failoverNoticeGiven = false;
+
+    // Helper to execute single fetch with timeout
+    async function executeSingleFetch(requestUrl, body) {
       const controller = (typeof AbortController === 'function') ? new AbortController() : null;
       let timeoutId = null;
 
@@ -176,7 +215,7 @@ Result: ${resultLabel}`;
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(requestBody)
+          body: JSON.stringify(body)
         };
 
         if (controller) {
@@ -184,9 +223,7 @@ Result: ${resultLabel}`;
         }
 
         const response = await fetch(requestUrl, fetchOptions);
-
         if (timeoutId) clearTimeout(timeoutId);
-
         return response;
       } catch (err) {
         if (timeoutId) clearTimeout(timeoutId);
@@ -194,99 +231,136 @@ Result: ${resultLabel}`;
       }
     }
 
-    // 3. Network Request with HTTP status handling & 429 retry
-    try {
-      let response = await executeRequest();
+    // 4. Multi-Model & Multi-Key Request Loop
+    for (let mIdx = 0; mIdx < modelChain.length; mIdx++) {
+      const currentModel = modelChain[mIdx];
+      const requestBody = buildRequestBody(question, selectedAnswer, isCorrect, currentModel);
 
-      // Handle HTTP 429 (Rate Limit): wait 4s and retry once
-      if (response.status === 429) {
-        console.warn('[GeminiAI] Free-tier rate limit (429) reached. Retrying in 4 seconds...');
-        await wait(GEMINI_CONFIG.RETRY_DELAY_MS);
-        response = await executeRequest();
+      for (let kIdx = 0; kIdx < apiKeys.length; kIdx++) {
+        const currentKey = apiKeys[kIdx];
+        const url = `${getModelEndpoint(currentModel)}?key=${encodeURIComponent(currentKey)}`;
 
-        if (response.status === 429) {
-          return {
-            error: 'RATE_LIMIT',
-            message: 'Gemini free-tier rate limit reached. Waiting for quota...'
-          };
+        try {
+          let response = await executeSingleFetch(url, requestBody);
+
+          // Rate limit handling (HTTP 429)
+          if (response.status === 429) {
+            console.warn(`[GeminiAI] Quota limit (429) on ${currentModel} (key #${kIdx + 1}).`);
+
+            const hasNextKey = (kIdx + 1 < apiKeys.length);
+            const hasNextModel = (mIdx + 1 < modelChain.length);
+
+            // If another key or fallback model is available, switch immediately!
+            if (hasNextKey || hasNextModel) {
+              failoverNoticeGiven = true;
+              continue;
+            }
+
+            // Otherwise, perform standard backoff retry for burst limits
+            await wait(GEMINI_CONFIG.RETRY_DELAY_MS);
+            response = await executeSingleFetch(url, requestBody);
+
+            if (response.status === 429) {
+              return {
+                error: 'RATE_LIMIT',
+                model: currentModel,
+                message: `Gemini daily quota reached for ${currentModel}. Wait for quota reset or switch API keys.`
+              };
+            }
+          }
+
+          // Auth errors (400, 401, 403)
+          if (response.status === 400 || response.status === 401 || response.status === 403) {
+            const errorJson = await response.json().catch(() => null);
+            console.error(`[GeminiAI] Auth/Client Error on ${currentModel}:`, response.status, errorJson);
+            if (kIdx + 1 < apiKeys.length) {
+              continue; // Try next key if available
+            }
+            const detailMsg = errorJson && errorJson.error && errorJson.error.message;
+            return {
+              error: 'AUTH_ERROR',
+              status: response.status,
+              message: detailMsg || 'Invalid or restricted API key. Please verify your key.'
+            };
+          }
+
+          // Server errors
+          if (!response.ok) {
+            const errorJson = await response.json().catch(() => null);
+            console.error(`[GeminiAI] Server Error on ${currentModel}:`, response.status, errorJson);
+            if (mIdx + 1 < modelChain.length) {
+              failoverNoticeGiven = true;
+              continue; // Try fallback model
+            }
+            const detailMsg = errorJson && errorJson.error && errorJson.error.message;
+            return {
+              error: 'HTTP_ERROR',
+              status: response.status,
+              message: detailMsg || `AI service returned error status ${response.status}.`
+            };
+          }
+
+          // Successful response parsing
+          const data = await response.json();
+          const candidate = data.candidates && data.candidates[0];
+          const parts = (candidate && candidate.content && Array.isArray(candidate.content.parts))
+            ? candidate.content.parts
+            : [];
+
+          const explanationText = parts
+            .filter(p => !p.thought && typeof p.text === 'string')
+            .map(p => p.text)
+            .join('')
+            .trim();
+
+          if (!explanationText) {
+            if (mIdx + 1 < modelChain.length) {
+              continue;
+            }
+            return {
+              error: 'EMPTY_RESPONSE',
+              message: 'Received empty response from AI tutor.'
+            };
+          }
+
+          // Cache explanation in memory and persistent localStorage
+          if (global.AppState) {
+            if (typeof global.AppState.cacheExplanation === 'function') {
+              global.AppState.cacheExplanation(question.id, explanationText);
+            } else if (global.AppState.session && global.AppState.session.explanations) {
+              global.AppState.session.explanations[question.id] = explanationText;
+            }
+          }
+
+          // Inform user if an automatic failover occurred to preserve study uninterrupted
+          if (failoverNoticeGiven && currentModel !== modelChain[0]) {
+            showToast(`Quota reached on ${modelChain[0]}. Auto-switched to ${currentModel} (1,500 RPD).`, 'info', 4000);
+          }
+
+          return explanationText;
+
+        } catch (err) {
+          if (err && err.name === 'AbortError') {
+            return {
+              error: 'TIMEOUT',
+              message: 'AI response timed out after 60 seconds.'
+            };
+          }
+
+          if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+            return {
+              error: 'OFFLINE',
+              message: 'Internet connection unavailable.'
+            };
+          }
         }
       }
-
-      // Handle HTTP 400 / 401 / 403 (Authentication / Key Errors)
-      if (response.status === 400 || response.status === 401 || response.status === 403) {
-        const errorJson = await response.json().catch(() => null);
-        console.error('[GeminiAI] Auth/Client Error:', response.status, errorJson);
-        const detailMsg = errorJson && errorJson.error && errorJson.error.message;
-        return {
-          error: 'AUTH_ERROR',
-          status: response.status,
-          message: detailMsg || 'Invalid or restricted API key. Please verify your key.'
-        };
-      }
-
-      // Handle general server errors
-      if (!response.ok) {
-        const errorJson = await response.json().catch(() => null);
-        console.error('[GeminiAI] Server Error:', response.status, errorJson);
-        const detailMsg = errorJson && errorJson.error && errorJson.error.message;
-        return {
-          error: 'HTTP_ERROR',
-          status: response.status,
-          message: detailMsg || `AI service returned error status ${response.status}.`
-        };
-      }
-
-      // 4. Parse candidate response text (handling multi-part and thinking responses)
-      const data = await response.json();
-      const candidate = data.candidates && data.candidates[0];
-      const finishReason = candidate && candidate.finishReason;
-      if (finishReason === 'MAX_TOKENS') {
-        console.warn('[GeminiAI] Response was truncated due to maxOutputTokens ceiling.');
-      }
-
-      // Concatenate all text parts while ignoring internal reasoning/thought objects
-      const parts = (candidate && candidate.content && Array.isArray(candidate.content.parts))
-        ? candidate.content.parts
-        : [];
-
-      const explanationText = parts
-        .filter(p => !p.thought && typeof p.text === 'string')
-        .map(p => p.text)
-        .join('')
-        .trim();
-
-      if (!explanationText) {
-        return {
-          error: 'EMPTY_RESPONSE',
-          message: 'Received empty response from AI tutor.'
-        };
-      }
-
-      // 5. Cache response in session
-      if (global.AppState) {
-        if (typeof global.AppState.cacheExplanation === 'function') {
-          global.AppState.cacheExplanation(question.id, explanationText);
-        } else if (global.AppState.session && global.AppState.session.explanations) {
-          global.AppState.session.explanations[question.id] = explanationText;
-        }
-      }
-
-      return explanationText;
-
-    } catch (err) {
-      if (err && err.name === 'AbortError') {
-        return {
-          error: 'TIMEOUT',
-          message: 'AI response timed out after 30 seconds.'
-        };
-      }
-
-      // Offline or network unreachable
-      return {
-        error: 'OFFLINE',
-        message: 'Internet connection unavailable.'
-      };
     }
+
+    return {
+      error: 'RATE_LIMIT',
+      message: 'Gemini free-tier quota exhausted across all available models. Please retry later or update your API key.'
+    };
   }
 
   /**

@@ -34,7 +34,10 @@
   const STORAGE_KEYS = Object.freeze({
     API_KEY: 'MAT304a_GEMINI_API_KEY',
     SHUFFLE_PREF: 'MAT304a_SHUFFLE_PREF',
-    DIFFICULTY_PREF: 'MAT304a_DIFFICULTY_PREF'
+    DIFFICULTY_PREF: 'MAT304a_DIFFICULTY_PREF',
+    AI_ENABLED: 'MAT304a_AI_ENABLED',
+    AI_CACHE: 'MAT304a_AI_EXPLANATIONS_CACHE',
+    AI_MODEL: 'MAT304a_AI_MODEL'
   });
 
   let currentState = STATES.WELCOME;
@@ -185,6 +188,54 @@
     return 'easy';
   }
 
+  function saveAiEnabled(enabled) {
+    const boolVal = Boolean(enabled);
+    safeSetItem(STORAGE_KEYS.AI_ENABLED, boolVal ? 'true' : 'false');
+    if (session && session.settings) {
+      session.settings.aiEnabled = boolVal;
+    }
+    updateAiUI(boolVal);
+    dispatchAppEvent('aiToggleChange', { enabled: boolVal });
+    return boolVal;
+  }
+
+  function isAiEnabled() {
+    const raw = safeGetItem(STORAGE_KEYS.AI_ENABLED);
+    if (raw !== null) {
+      return raw === 'true';
+    }
+    // Fallback to global StudyHub setting if set
+    const hubRaw = safeGetItem('studyhub_ai_enabled');
+    if (hubRaw !== null) {
+      return hubRaw === 'true';
+    }
+    return true; // Default enabled
+  }
+
+  function updateAiUI(enabled) {
+    if (typeof document === 'undefined') return;
+    const toggleInput = document.getElementById('ai-toggle-input');
+    const statusBadge = document.getElementById('ai-setting-status-badge');
+    const headerToggle = document.getElementById('btn-header-ai-toggle');
+    const headerText = document.getElementById('header-ai-text');
+
+    if (toggleInput) {
+      toggleInput.checked = enabled;
+    }
+    if (statusBadge) {
+      statusBadge.textContent = enabled ? 'Tokens Active' : 'Tokens Preserved';
+      statusBadge.className = `badge-ai-status ${enabled ? 'active' : 'paused'}`;
+    }
+    if (headerToggle) {
+      headerToggle.classList.toggle('active', enabled);
+      headerToggle.classList.toggle('paused', !enabled);
+      headerToggle.setAttribute('title', enabled ? 'AI Explanations: Active (Click to pause & save tokens)' : 'AI Explanations: Paused · 0 Tokens (Click to activate)');
+    }
+    if (headerText) {
+      headerText.textContent = enabled ? 'AI: ON' : 'AI: OFF';
+    }
+  }
+
   // ==========================================================================
   // 3. Fisher-Yates Shuffle Algorithm (Unbiased, In-Place Array Permutation)
   // ==========================================================================
@@ -213,7 +264,8 @@
       difficulty: 'easy',
       shuffled: false,
       choicesShuffled: false,
-      apiKey: null
+      apiKey: null,
+      aiEnabled: true
     }
   };
 
@@ -382,8 +434,32 @@
     return record;
   }
 
+  function getPersistentCache() {
+    try {
+      const raw = safeGetItem(STORAGE_KEYS.AI_CACHE);
+      if (raw) {
+        return JSON.parse(raw);
+      }
+    } catch (e) {
+      console.warn('[AppState] Failed to parse persistent explanation cache:', e);
+    }
+    return {};
+  }
+
+  function saveToPersistentCache(questionId, explanationText) {
+    try {
+      const cache = getPersistentCache();
+      cache[questionId] = explanationText;
+      safeSetItem(STORAGE_KEYS.AI_CACHE, JSON.stringify(cache));
+    } catch (e) {
+      console.warn('[AppState] Failed to write to persistent explanation cache:', e);
+    }
+  }
+
   function cacheExplanation(questionId, explanationText) {
+    if (!questionId || !explanationText) return explanationText;
     session.explanations[questionId] = explanationText;
+    saveToPersistentCache(questionId, explanationText);
     return explanationText;
   }
 
@@ -392,7 +468,30 @@
   }
 
   function getExplanation(questionId) {
-    return session.explanations[questionId] || null;
+    if (session.explanations && session.explanations[questionId]) {
+      return session.explanations[questionId];
+    }
+    const persistent = getPersistentCache();
+    if (persistent && persistent[questionId]) {
+      // Hydrate into current session memory
+      session.explanations[questionId] = persistent[questionId];
+      return persistent[questionId];
+    }
+    return null;
+  }
+
+  function saveModelPreference(model) {
+    const valid = (model === 'gemini-1.5-flash' || model === 'gemini-3.6-flash') ? model : 'gemini-2.0-flash';
+    safeSetItem(STORAGE_KEYS.AI_MODEL, valid);
+    return valid;
+  }
+
+  function getModelPreference() {
+    const raw = safeGetItem(STORAGE_KEYS.AI_MODEL);
+    if (raw === 'gemini-1.5-flash' || raw === 'gemini-3.6-flash') {
+      return raw;
+    }
+    return 'gemini-2.0-flash';
   }
 
   function nextQuestion() {
@@ -535,6 +634,25 @@
         }
       });
     });
+
+    // AI Explanations Toggle Controls
+    const aiToggleInput = document.getElementById('ai-toggle-input');
+    const btnHeaderAiToggle = document.getElementById('btn-header-ai-toggle');
+    const currentAiState = isAiEnabled();
+    updateAiUI(currentAiState);
+
+    if (aiToggleInput) {
+      aiToggleInput.addEventListener('change', () => {
+        saveAiEnabled(aiToggleInput.checked);
+      });
+    }
+
+    if (btnHeaderAiToggle) {
+      btnHeaderAiToggle.addEventListener('click', () => {
+        const nextState = !isAiEnabled();
+        saveAiEnabled(nextState);
+      });
+    }
 
     // Google Gemini 3.6 API Key Guide Modal Handlers
     const guideModal = document.getElementById('api-key-guide-modal');
@@ -717,6 +835,12 @@
     getShufflePref,
     saveDifficultyPref,
     getDifficultyPref,
+    saveAiEnabled,
+    isAiEnabled,
+    updateAiUI,
+    saveModelPreference,
+    getModelPreference,
+    getPersistentCache,
     initWelcomeControls,
     initTheme,
     toggleTheme,

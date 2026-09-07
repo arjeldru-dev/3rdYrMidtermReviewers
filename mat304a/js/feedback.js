@@ -393,14 +393,96 @@
    * @param {Object} question
    * @param {string} selected
    * @param {boolean} isCorrect
+   * @param {boolean} [force=false] - If true, ignores disabled toggle to explain on demand
    */
-  function fetchAndRenderExplanation(question, selected, isCorrect) {
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function fetchAndRenderExplanation(question, selected, isCorrect, force = false) {
     const els = getElements();
     if (!els.aiExplanationContent || !question) return;
 
     // Track active question to prevent stale async callbacks from overwriting new questions
     const questionId = question.id;
     activeExplanationQuestionId = questionId;
+
+    // Token Preservation Check: If AI is disabled and not forced on-demand, DO NOT call Gemini
+    const isAiActive = global.AppState && typeof global.AppState.isAiEnabled === 'function'
+      ? global.AppState.isAiEnabled()
+      : true;
+
+    if (!isAiActive && !force) {
+      // Check if session already has a cached explanation from earlier
+      const cached = (global.AppState && typeof global.AppState.getExplanation === 'function')
+        ? global.AppState.getExplanation(questionId)
+        : null;
+
+      if (cached) {
+        const parsedHtml = renderMarkdown(cached);
+        els.aiExplanationContent.innerHTML = `
+          <div class="explanation-badge">
+            <span class="badge-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+            <span>Concept Resolution &amp; Reasoning (Cached)</span>
+          </div>
+          <div class="explanation-text">
+            ${parsedHtml}
+          </div>
+        `;
+        return;
+      }
+
+      // Render token-saving state: Zero API calls, 0 tokens consumed
+      const correctLetter = question.answer ? String(question.answer).toUpperCase() : '';
+      const choices = question.choices || {};
+      const correctChoiceText = choices[question.answer ? String(question.answer).toLowerCase() : ''] || '';
+
+      els.aiExplanationContent.innerHTML = `
+        <div class="ai-paused-container">
+          <div class="ai-paused-main">
+            <div class="ai-paused-badge">
+              <span class="pulse-dot-amber" aria-hidden="true"></span>
+              <span>AI Explanations Paused · 0 Tokens Consumed</span>
+            </div>
+            <p class="ai-paused-desc">
+              Automated explanations are turned off. Correct answer is <strong>(${correctLetter}) ${escapeHtml(correctChoiceText)}</strong>.
+            </p>
+          </div>
+          <div class="ai-paused-actions">
+            <button type="button" class="btn-explain-once" id="btn-explain-on-demand" title="Generate explanation for this question only">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+              <span>Explain This Question Only</span>
+            </button>
+            <button type="button" class="btn-resume-ai-link" id="btn-enable-ai-global">
+              Turn AI On
+            </button>
+          </div>
+        </div>
+      `;
+
+      const btnDemand = document.getElementById('btn-explain-on-demand');
+      if (btnDemand) {
+        btnDemand.addEventListener('click', () => {
+          fetchAndRenderExplanation(question, selected, isCorrect, true);
+        });
+      }
+
+      const btnResume = document.getElementById('btn-enable-ai-global');
+      if (btnResume) {
+        btnResume.addEventListener('click', () => {
+          if (global.AppState && typeof global.AppState.saveAiEnabled === 'function') {
+            global.AppState.saveAiEnabled(true);
+          }
+          fetchAndRenderExplanation(question, selected, isCorrect, true);
+        });
+      }
+      return;
+    }
 
     // 1. Show loading skeleton shimmer
     showExplanationLoading();
@@ -459,25 +541,31 @@
           }
 
           if (result.error === 'RATE_LIMIT') {
+            const modelName = result.model || 'Gemini Flash';
             els.aiExplanationContent.innerHTML = `
               <div class="rate-limit-notice">
                 <p class="text-secondary text-sm" style="margin-bottom: 8px;">
-                  Gemini free-tier rate limit reached. Waiting for quota...
+                  <strong style="color: var(--warning-amber, #f59e0b);">Quota Limit Reached:</strong> The free-tier quota for ${escapeHtml(modelName)} was reached. Standard models like Gemini 2.0 Flash offer 1,500 requests/day (75× more quota than preview tiers).
                 </p>
-                <button type="button" class="btn btn-secondary btn-sm retry-btn" id="btn-retry-explanation">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <polyline points="1 4 1 10 7 10"/>
-                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
-                  </svg>
-                  <span>Retry AI Tutor</span>
-                </button>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <button type="button" class="btn btn-secondary btn-sm retry-btn" id="btn-retry-explanation">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polyline points="1 4 1 10 7 10"/>
+                      <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                    </svg>
+                    <span>Retry with 2.0 Flash (1,500 RPD)</span>
+                  </button>
+                </div>
               </div>
             `;
 
             const btnRetry = document.getElementById('btn-retry-explanation');
             if (btnRetry) {
               btnRetry.addEventListener('click', () => {
-                fetchAndRenderExplanation(question, selected, isCorrect);
+                if (global.AppState && typeof global.AppState.saveModelPreference === 'function') {
+                  global.AppState.saveModelPreference('gemini-2.0-flash');
+                }
+                fetchAndRenderExplanation(question, selected, isCorrect, true);
               });
             }
             return;
@@ -608,6 +696,23 @@
       els.btnNext.addEventListener('click', event => {
         event.preventDefault();
         handleNextQuestion();
+      });
+    }
+
+    // Dynamic AI Toggle Listener (Updates active feedback view without refresh)
+    if (typeof window !== 'undefined') {
+      window.addEventListener('aiToggleChange', (e) => {
+        const isEnabled = e.detail && e.detail.enabled;
+        if (global.AppState && typeof global.AppState.getCurrentState === 'function') {
+          if (global.AppState.getCurrentState() === global.AppState.STATES.FEEDBACK) {
+            const currentQ = getCurrentQuestion();
+            if (currentQ) {
+              const selected = getSelectedChoice();
+              const isCorrect = selected && currentQ.answer && String(selected).toLowerCase() === String(currentQ.answer).toLowerCase();
+              fetchAndRenderExplanation(currentQ, selected, isCorrect, isEnabled);
+            }
+          }
+        }
       });
     }
   }

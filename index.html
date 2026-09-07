@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="StudyHub — 3rd Year Academic Reviewers & Active Recall Studios. Curated question banks, KaTeX math typesetting, and AI study tutoring for university midterms.">
   <title>StudyHub · 3rd Year Midterm Reviewers & Active Recall Studios</title>
 
@@ -31,14 +31,19 @@
       </a>
 
       <div class="header-actions">
-        <a href="#api-guide" class="btn-header" title="How to get a free Google Gemini API Key">
+        <a href="#api-guide" class="btn-header" title="How to get a free Google Gemini API Key" aria-label="API Key Guide">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          <span>API Key Guide</span>
+          <span class="btn-header-label">API Guide</span>
         </a>
 
-        <button type="button" id="btn-open-api-modal" class="btn-header" title="Configure Gemini AI Key">
+        <button type="button" id="btn-header-ai-status" class="btn-header btn-header-ai" title="Toggle AI Tutoring & Explanations (Conserves Tokens)" aria-label="Toggle AI Tutoring">
+          <span class="ai-status-indicator" aria-hidden="true"></span>
+          <span id="header-ai-status-text" class="btn-header-label">AI: Active</span>
+        </button>
+
+        <button type="button" id="btn-open-api-modal" class="btn-header" title="Configure Gemini AI Key" aria-label="Configure Gemini AI Key">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          <span>Gemini AI Key</span>
+          <span class="btn-header-label">Gemini Key</span>
         </button>
 
         <button type="button" id="btn-theme-toggle" class="theme-toggle-btn" aria-label="Toggle visual theme" title="Toggle visual theme">
@@ -217,7 +222,7 @@
 
         <h2 class="card-title">Operations Research</h2>
         <p class="card-desc">
-          Mathematical optimization models, Linear Programming formulation, Simplex method algorithms, sensitivity analysis, Big-M penalty, and Two-Phase simplex.
+          Mathematical optimization models based on Hamdy A. Taha and Hillier &amp; Lieberman. Linear Programming formulation, Simplex method algorithms, sensitivity analysis, Big-M penalty, and Two-Phase simplex.
         </p>
 
         <div class="card-feature-tags">
@@ -421,8 +426,8 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
           </div>
           <div>
-            <div class="guide-callout-title">100% Free Quota</div>
-            <div class="guide-callout-text">Gemini 3.6 Flash free tier includes up to 15 requests per minute and 1,500 requests per day — more than enough for daily review.</div>
+            <div class="guide-callout-title">1,500 RPD Free Quota</div>
+            <div class="guide-callout-text">Gemini 2.0 Flash free tier includes up to 15 requests per minute and 1,500 requests per day (with auto-fallback to 1.5 Flash) — 75× more quota than preview models.</div>
           </div>
         </div>
 
@@ -484,6 +489,54 @@
           <div class="api-field">
             <input type="password" id="hub-api-key-input" class="api-input" placeholder="Paste your Gemini API key..." autocomplete="off" spellcheck="false">
             <button type="button" id="btn-save-hub-key" class="btn-save-key">Save Key</button>
+          </div>
+        </div>
+
+        <!-- AI Tutoring & Token Management Section -->
+        <div class="ai-toggle-section">
+          <div class="ai-toggle-header">
+            <div class="ai-toggle-info">
+              <div class="ai-toggle-title-row">
+                <span class="ai-toggle-title">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                  AI Explanations &amp; Tutoring
+                </span>
+                <span id="hub-ai-status-pill" class="ai-status-pill active">Active · Consuming Tokens</span>
+              </div>
+              <p class="ai-toggle-desc">
+                Turn off AI explanations if you don't intend to use automated tutoring. Your Gemini API tokens won't be used, and quizzes run 100% locally.
+              </p>
+            </div>
+            <label class="switch-control" for="hub-ai-toggle" aria-label="Toggle AI Explanations Globally">
+              <input type="checkbox" id="hub-ai-toggle" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <!-- Course-Level Granular Controls -->
+          <div class="course-ai-controls">
+            <div class="course-ai-header">
+              <span class="course-ai-label">Individual Course Overrides:</span>
+              <span class="text-xs text-muted">Toggle per course</span>
+            </div>
+            <div class="course-ai-toggles-grid">
+              <label class="course-toggle-item" for="toggle-ai-mcs306">
+                <input type="checkbox" id="toggle-ai-mcs306" class="course-ai-checkbox" data-course="mcs306" checked>
+                <span class="course-toggle-custom-check"></span>
+                <div class="course-toggle-text-wrap">
+                  <span class="course-toggle-title">MCS 306</span>
+                  <span class="course-toggle-sub">Artificial Intelligence</span>
+                </div>
+              </label>
+              <label class="course-toggle-item" for="toggle-ai-mat304a">
+                <input type="checkbox" id="toggle-ai-mat304a" class="course-ai-checkbox" data-course="mat304a" checked>
+                <span class="course-toggle-custom-check"></span>
+                <div class="course-toggle-text-wrap">
+                  <span class="course-toggle-title">MAT 304a</span>
+                  <span class="course-toggle-sub">Operations Research I</span>
+                </div>
+              </label>
+            </div>
           </div>
         </div>
       </div>

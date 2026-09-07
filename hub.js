@@ -110,19 +110,152 @@
     });
   });
 
-  // --- Shared Gemini API Key Modal ---
+  // --- Shared Gemini API Key & AI Tutoring Settings Modal ---
   const modalBackdrop = document.getElementById('api-setup-modal');
   const btnOpenModal = document.getElementById('btn-open-api-modal');
   const btnCloseModal = document.getElementById('btn-close-api-modal');
   const apiKeyInput = document.getElementById('hub-api-key-input');
   const btnSaveKey = document.getElementById('btn-save-hub-key');
 
-  const API_STORAGE_KEYS = ['MCS306_GEMINI_API_KEY', 'mcs306_gemini_api_key', 'gemini_api_key'];
+  const btnHeaderAiStatus = document.getElementById('btn-header-ai-status');
+  const headerAiStatusText = document.getElementById('header-ai-status-text');
+  const hubAiToggle = document.getElementById('hub-ai-toggle');
+  const hubAiStatusPill = document.getElementById('hub-ai-status-pill');
+  const courseAiCheckboxes = document.querySelectorAll('.course-ai-checkbox');
+
+  const GLOBAL_AI_KEY = 'studyhub_ai_enabled';
+  const COURSE_AI_KEYS = {
+    mcs306: 'MCS306_AI_ENABLED',
+    mat304a: 'MAT304a_AI_ENABLED'
+  };
+
+  const API_STORAGE_KEYS = [
+    'MCS306_GEMINI_API_KEY',
+    'mcs306_gemini_api_key',
+    'MAT304a_GEMINI_API_KEY',
+    'mat304a_gemini_api_key',
+    'gemini_api_key'
+  ];
+
+  // --- AI Tutoring State Handlers ---
+  function getGlobalAiState() {
+    try {
+      const val = localStorage.getItem(GLOBAL_AI_KEY);
+      return val === null ? true : val === 'true';
+    } catch (e) {
+      return true;
+    }
+  }
+
+  function getCourseAiState(courseId) {
+    const key = COURSE_AI_KEYS[courseId];
+    if (!key) return true;
+    try {
+      const val = localStorage.getItem(key);
+      return val === null ? getGlobalAiState() : val === 'true';
+    } catch (e) {
+      return true;
+    }
+  }
+
+  function updateAiUI(globalEnabled) {
+    if (headerAiStatusText) {
+      headerAiStatusText.textContent = globalEnabled ? 'AI: Active' : 'AI: Off';
+    }
+    if (btnHeaderAiStatus) {
+      btnHeaderAiStatus.classList.toggle('ai-paused', !globalEnabled);
+      btnHeaderAiStatus.classList.toggle('ai-active', globalEnabled);
+      btnHeaderAiStatus.setAttribute('title', globalEnabled ? 'AI Tutoring Active (Click to manage quota)' : 'AI Tutoring Paused · Tokens Preserved');
+    }
+    if (hubAiToggle) {
+      hubAiToggle.checked = globalEnabled;
+    }
+    if (hubAiStatusPill) {
+      hubAiStatusPill.textContent = globalEnabled ? 'Active · Consuming Tokens' : 'Paused · Tokens Preserved';
+      hubAiStatusPill.className = `ai-status-pill ${globalEnabled ? 'active' : 'paused'}`;
+    }
+  }
+
+  function loadAiSettings() {
+    const globalEnabled = getGlobalAiState();
+    updateAiUI(globalEnabled);
+
+    courseAiCheckboxes.forEach(cb => {
+      const course = cb.getAttribute('data-course');
+      cb.checked = getCourseAiState(course);
+    });
+  }
+
+  function setGlobalAi(enabled) {
+    try {
+      localStorage.setItem(GLOBAL_AI_KEY, enabled ? 'true' : 'false');
+      // Also update individual courses to match global state
+      Object.values(COURSE_AI_KEYS).forEach(k => {
+        localStorage.setItem(k, enabled ? 'true' : 'false');
+      });
+    } catch (e) {
+      console.warn('Error saving global AI state:', e);
+    }
+    updateAiUI(enabled);
+    courseAiCheckboxes.forEach(cb => {
+      cb.checked = enabled;
+    });
+    showToast(enabled ? '✓ AI Explanations enabled across all courses' : '⏸️ AI Explanations disabled (Tokens preserved)');
+  }
+
+  function setCourseAi(courseId, enabled) {
+    const key = COURSE_AI_KEYS[courseId];
+    if (!key) return;
+    try {
+      localStorage.setItem(key, enabled ? 'true' : 'false');
+    } catch (e) {}
+
+    // Check if all are off or any is on to update global indicator
+    let anyEnabled = false;
+    courseAiCheckboxes.forEach(cb => {
+      if (cb.checked) anyEnabled = true;
+    });
+
+    try {
+      localStorage.setItem(GLOBAL_AI_KEY, anyEnabled ? 'true' : 'false');
+    } catch (e) {}
+
+    updateAiUI(anyEnabled);
+    const label = courseId.toUpperCase();
+    showToast(enabled ? `✓ ${label} AI explanations enabled` : `⏸️ ${label} AI explanations disabled (Tokens saved)`);
+  }
+
+  if (hubAiToggle) {
+    hubAiToggle.addEventListener('change', (e) => {
+      setGlobalAi(e.target.checked);
+    });
+  }
+
+  courseAiCheckboxes.forEach(cb => {
+    cb.addEventListener('change', (e) => {
+      const course = cb.getAttribute('data-course');
+      setCourseAi(course, e.target.checked);
+    });
+  });
+
+  if (btnHeaderAiStatus) {
+    btnHeaderAiStatus.addEventListener('click', () => {
+      openModal();
+      // Smoothly scroll modal to AI settings
+      const aiSection = document.querySelector('.ai-toggle-section');
+      if (aiSection) {
+        setTimeout(() => {
+          aiSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 120);
+      }
+    });
+  }
 
   function loadSavedApiKey() {
     if (!apiKeyInput) return;
     try {
       const saved = localStorage.getItem('MCS306_GEMINI_API_KEY') || 
+                    localStorage.getItem('MAT304a_GEMINI_API_KEY') ||
                     localStorage.getItem('mcs306_gemini_api_key') || 
                     localStorage.getItem('gemini_api_key') || '';
       if (saved) {
@@ -159,6 +292,7 @@
   function openModal() {
     if (modalBackdrop) {
       loadSavedApiKey();
+      loadAiSettings();
       modalBackdrop.classList.add('active');
       modalBackdrop.setAttribute('aria-hidden', 'false');
       if (apiKeyInput) {
@@ -198,6 +332,9 @@
       }
     });
   }
+
+  // Initialize AI Settings on page load
+  loadAiSettings();
 
   // --- Toast Notification ---
   function showToast(message) {

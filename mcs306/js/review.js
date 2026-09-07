@@ -243,11 +243,17 @@
       if (item.cachedExplanation) {
         explanationHtml = renderMarkdown(item.cachedExplanation);
       } else {
+        const isAiOff = global.AppState && typeof global.AppState.isAiEnabled === 'function' && !global.AppState.isAiEnabled();
         explanationHtml = `
-          <p class="text-secondary text-sm">
-            No AI explanation was generated for this question during your active session. 
-            (To generate step-by-step reasoning, provide your Google Gemini API key on the welcome screen).
-          </p>
+          <div class="review-no-explanation">
+            <p class="text-secondary text-sm">
+              ${isAiOff ? 'AI explanations were turned off during your session to preserve tokens.' : 'No AI explanation was generated for this question during your active session.'}
+            </p>
+            <button type="button" class="btn-review-demand-ai" data-qid="${q.id}" data-selected="${studentChoice}">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+              <span>Explain with AI</span>
+            </button>
+          </div>
         `;
       }
 
@@ -336,6 +342,45 @@
           if (card) {
             const btn = card.querySelector('.btn-toggle-expand');
             toggleCardExpansion(card, btn);
+          }
+        }
+
+        // On-Demand AI Explanation Trigger
+        const demandBtn = event.target.closest('.btn-review-demand-ai');
+        if (demandBtn) {
+          const qid = parseInt(demandBtn.getAttribute('data-qid'), 10);
+          const studentChoice = demandBtn.getAttribute('data-selected') || '';
+          const card = demandBtn.closest('.missed-card');
+          const drawer = card ? card.querySelector('.explanation-content') : null;
+
+          if (drawer && typeof global.fetchGeminiExplanation === 'function') {
+            const qObj = (global.AppState && typeof global.AppState.getQuestion === 'function')
+              ? global.AppState.getQuestion(qid)
+              : null;
+
+            if (qObj) {
+              drawer.innerHTML = `
+                <div class="skeleton-loader">
+                  <div class="skeleton-line w-80"></div>
+                  <div class="skeleton-line w-90"></div>
+                  <div class="skeleton-line w-60"></div>
+                </div>
+              `;
+              global.fetchGeminiExplanation(qObj, studentChoice, false)
+                .then(res => {
+                  if (typeof res === 'string') {
+                    if (global.AppState && typeof global.AppState.cacheExplanation === 'function') {
+                      global.AppState.cacheExplanation(qid, res);
+                    }
+                    drawer.innerHTML = renderMarkdown(res);
+                  } else {
+                    drawer.innerHTML = `<p class="text-secondary text-sm">Failed to generate explanation: ${res && res.message ? res.message : 'Please check your API key.'}</p>`;
+                  }
+                })
+                .catch(err => {
+                  drawer.innerHTML = `<p class="text-secondary text-sm">Error generating explanation: ${err.message || 'Network error'}</p>`;
+                });
+            }
           }
         }
       });
