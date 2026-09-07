@@ -481,7 +481,7 @@
   }
 
   function saveModelPreference(model) {
-    const valid = (model === 'gemini-3.6-flash') ? model : 'gemini-2.0-flash';
+    const valid = (model === 'gemini-3.6-flash' || model === 'gemini-3.5-flash-lite') ? model : 'gemini-2.0-flash';
     safeSetItem(STORAGE_KEYS.AI_MODEL, valid);
     return valid;
   }
@@ -493,7 +493,7 @@
       safeSetItem(STORAGE_KEYS.AI_MODEL, 'gemini-2.0-flash');
       return 'gemini-2.0-flash';
     }
-    if (raw === 'gemini-3.6-flash') {
+    if (raw === 'gemini-3.6-flash' || raw === 'gemini-3.5-flash-lite') {
       return raw;
     }
     return 'gemini-2.0-flash';

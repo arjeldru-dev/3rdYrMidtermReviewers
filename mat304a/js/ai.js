@@ -16,6 +16,7 @@
     PRIMARY_MODELS: [
       'gemini-2.0-flash',
       'gemini-2.0-flash-lite',
+      'gemini-3.5-flash-lite',
       'gemini-3.6-flash'
     ],
     TEMPERATURE: 0.2,
@@ -63,6 +64,7 @@
           const priority = [
             'gemini-2.0-flash',
             'gemini-2.0-flash-lite',
+            'gemini-3.5-flash-lite',
             'gemini-3.6-flash'
           ];
 
@@ -201,7 +203,7 @@ Result: ${resultLabel}`;
 
   /**
    * Fetches an AI explanation from Google Gemini with persistent caching,
-   * multi-key rotation, and intelligent model failover (gemini-2.0-flash -> gemini-2.0-flash-lite -> gemini-3.6-flash).
+   * multi-key rotation, and intelligent model failover (gemini-2.0-flash -> gemini-2.0-flash-lite -> gemini-3.5-flash-lite -> gemini-3.6-flash).
    * 
    * @param {Object} question - Question data object ({ id, question, choices, answer })
    * @param {string} selectedAnswer - Letter selected by student ('a', 'b', 'c', 'd')
