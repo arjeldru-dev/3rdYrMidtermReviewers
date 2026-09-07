@@ -13,15 +13,65 @@
   'use strict';
 
   const GEMINI_CONFIG = Object.freeze({
-    PRIMARY_MODEL: 'gemini-2.0-flash',     // 1,500 RPD, sub-second latency, rigorous reasoning
-    FALLBACK_MODEL: 'gemini-1.5-flash',    // 1,500 RPD, dependable fallback
-    PREVIEW_MODEL: 'gemini-3.6-flash',     // 20 RPD preview
+    PRIMARY_MODELS: [
+      'gemini-2.5-flash',
+      'gemini-2.5-flash-lite',
+      'gemini-3.6-flash',
+      'gemini-2.0-flash'
+    ],
     TEMPERATURE: 0.2,
     MAX_OUTPUT_TOKENS: 8192,
     THINKING_BUDGET: 1024,
     TIMEOUT_MS: 60000,
     RETRY_DELAY_MS: 4000
   });
+
+  let cachedDiscoveredModels = null;
+
+  /**
+   * Queries Google's ModelService.ListModels endpoint to discover active models
+   * that support generateContent for this user's specific API key.
+   * @param {string} apiKey
+   * @returns {Promise<string[]|null>}
+   */
+  async function discoverAvailableModels(apiKey) {
+    if (cachedDiscoveredModels && cachedDiscoveredModels.length > 0) {
+      return cachedDiscoveredModels;
+    }
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(apiKey)}`;
+      const res = await fetch(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': apiKey
+        }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.models)) {
+          const supported = data.models
+            .filter(m => Array.isArray(m.supportedGenerationMethods) && m.supportedGenerationMethods.includes('generateContent'))
+            .map(m => m.name.replace(/^models\//, ''));
+
+          // Prioritize Flash models first
+          supported.sort((a, b) => {
+            const aFlash = a.toLowerCase().includes('flash');
+            const bFlash = b.toLowerCase().includes('flash');
+            if (aFlash && !bFlash) return -1;
+            if (!aFlash && bFlash) return 1;
+            return 0;
+          });
+
+          console.log('[GeminiAI] Discovered available models for key:', supported);
+          cachedDiscoveredModels = supported;
+          return supported;
+        }
+      }
+    } catch (e) {
+      console.warn('[GeminiAI] Model discovery query failed:', e);
+    }
+    return null;
+  }
 
   function getModelEndpoint(modelName) {
     return `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelName)}:generateContent`;
@@ -187,19 +237,21 @@ Result: ${resultLabel}`;
     // 3. Determine Model Failover Chain
     const preferredModel = (global.AppState && typeof global.AppState.getModelPreference === 'function')
       ? global.AppState.getModelPreference()
-      : GEMINI_CONFIG.PRIMARY_MODEL;
+      : 'gemini-2.5-flash';
 
-    let modelChain = [GEMINI_CONFIG.PRIMARY_MODEL, GEMINI_CONFIG.FALLBACK_MODEL];
-    if (preferredModel === GEMINI_CONFIG.PREVIEW_MODEL) {
-      modelChain = [GEMINI_CONFIG.PREVIEW_MODEL, GEMINI_CONFIG.PRIMARY_MODEL, GEMINI_CONFIG.FALLBACK_MODEL];
-    } else if (preferredModel === GEMINI_CONFIG.FALLBACK_MODEL) {
-      modelChain = [GEMINI_CONFIG.FALLBACK_MODEL, GEMINI_CONFIG.PRIMARY_MODEL];
+    // Build model chain starting with candidate models
+    let modelChain = [...GEMINI_CONFIG.PRIMARY_MODELS];
+    if (preferredModel && !modelChain.includes(preferredModel)) {
+      modelChain.unshift(preferredModel);
+    } else if (preferredModel && modelChain.indexOf(preferredModel) > 0) {
+      modelChain.splice(modelChain.indexOf(preferredModel), 1);
+      modelChain.unshift(preferredModel);
     }
 
     let failoverNoticeGiven = false;
 
-    // Helper to execute single fetch with timeout
-    async function executeSingleFetch(requestUrl, body) {
+    // Helper to execute single fetch with timeout and auth headers
+    async function executeSingleFetch(requestUrl, body, apiKey) {
       const controller = (typeof AbortController === 'function') ? new AbortController() : null;
       let timeoutId = null;
 
@@ -213,7 +265,8 @@ Result: ${resultLabel}`;
         const fetchOptions = {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'x-goog-api-key': apiKey
           },
           body: JSON.stringify(body)
         };
@@ -241,7 +294,28 @@ Result: ${resultLabel}`;
         const url = `${getModelEndpoint(currentModel)}?key=${encodeURIComponent(currentKey)}`;
 
         try {
-          let response = await executeSingleFetch(url, requestBody);
+          let response = await executeSingleFetch(url, requestBody, currentKey);
+
+          // Handle 404 (Model not found for this API version/account)
+          if (response.status === 404) {
+            console.warn(`[GeminiAI] Model ${currentModel} returned 404 (not found). Dynamically inspecting live model list...`);
+            
+            if (!cachedDiscoveredModels) {
+              const liveModels = await discoverAvailableModels(currentKey);
+              if (liveModels && liveModels.length > 0) {
+                for (const lm of liveModels) {
+                  if (!modelChain.includes(lm)) {
+                    modelChain.push(lm);
+                  }
+                }
+              }
+            }
+
+            if (mIdx + 1 < modelChain.length) {
+              failoverNoticeGiven = true;
+              continue; // Automatically proceed to next model
+            }
+          }
 
           // Rate limit handling (HTTP 429)
           if (response.status === 429) {
@@ -258,7 +332,7 @@ Result: ${resultLabel}`;
 
             // Otherwise, perform standard backoff retry for burst limits
             await wait(GEMINI_CONFIG.RETRY_DELAY_MS);
-            response = await executeSingleFetch(url, requestBody);
+            response = await executeSingleFetch(url, requestBody, currentKey);
 
             if (response.status === 429) {
               return {
@@ -290,7 +364,7 @@ Result: ${resultLabel}`;
             console.error(`[GeminiAI] Server Error on ${currentModel}:`, response.status, errorJson);
             if (mIdx + 1 < modelChain.length) {
               failoverNoticeGiven = true;
-              continue; // Try fallback model
+              continue; // Try next candidate model
             }
             const detailMsg = errorJson && errorJson.error && errorJson.error.message;
             return {
@@ -334,7 +408,7 @@ Result: ${resultLabel}`;
 
           // Inform user if an automatic failover occurred to preserve study uninterrupted
           if (failoverNoticeGiven && currentModel !== modelChain[0]) {
-            showToast(`Quota reached on ${modelChain[0]}. Auto-switched to ${currentModel} (1,500 RPD).`, 'info', 4000);
+            showToast(`Auto-switched to ${currentModel} to preserve quota.`, 'info', 4000);
           }
 
           return explanationText;
