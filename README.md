@@ -10,8 +10,8 @@ Features high-yield question banks, step-by-step canonical proofs, KaTeX mathema
 
 | Course Code | Course Name | Status | Question Bank | Coverage & Features |
 | :--- | :--- | :---: | :---: | :--- |
-| **MCS 306** | **Introduction to Artificial Intelligence** | `Live` | **50 Problems** | Russell & Norvig: Rational Agents, Graph Search, A\*, Alpha-Beta Pruning, CSPs, Propositional & First-Order Logic, KaTeX formulas, Gemini 2.0 Flash AI Tutor |
-| **MAT 304a** | **Operations Research I** | `Live` | **70 Problems** | Hamdy A. Taha & Hillier-Lieberman: LP Formulations, Graphical Method, Simplex Tableau Mechanics ($c_j - z_j$), Big-M Penalty, Two-Phase Method, Sensitivity & Duality Analysis |
+| **MCS 306** | **Introduction to Artificial Intelligence** | `Live` | **50 Problems** | Russell & Norvig: Rational Agents, Graph Search, A\*, Alpha-Beta Pruning, CSPs, Propositional & First-Order Logic, KaTeX formulas, Gemini Flash AI Tutor |
+| **MAT 304a** | **Operations Research I** | `Live` | **70 Problems** | Hamdy A. Taha & Hillier-Lieberman: LP Formulations, Graphical Method, Simplex Tableau Mechanics ($c_j - z_j$), Big-M Penalty, Two-Phase Method, Sensitivity & Duality Analysis, KaTeX Tableaux, Gemini Flash AI Tutor |
 | **MCS 305** | **Software Engineering** | `In Curation` | Midterm Deck | Agile & Scrum, SDLC, GoF Design Patterns, Clean Architecture, CI/CD, Automated Testing Drills |
 | **MAT 301** | **Advanced Calculus 1** | `Planned` | Midterm Deck | Real Analysis, Sequences & Series, Cauchy Convergence, Bolzano-Weierstrass, Metric Spaces |
 | **MAT 302** | **Modern Geometry** | `Planned` | Midterm Deck | Axiomatic Systems, Non-Euclidean Geometry, Isometries, Hyperbolic Plane |
@@ -23,15 +23,26 @@ Features high-yield question banks, step-by-step canonical proofs, KaTeX mathema
 
 The portal features an interactive AI Tutor providing rigorous, 3-section pedagogical explanations (Conceptual Proof, 3 Distractor Analyses, and Core Key Takeaway) with standard LaTeX math rendering.
 
-### Rate Limit & Resilience Highlights
+### Supported Models & Auto-Failover Hierarchy
 
-* **1,500 Requests Per Day (RPD):** Configured with **`gemini-2.0-flash`** as the primary endpoint — providing **75× more quota** than preview tiers (which are capped at only 20 RPD).
+The client uses an adaptive multi-model failover engine with automatic discovery:
+
+| Priority | Model Identifier | Tier & Characteristics | Primary Role |
+| :---: | :--- | :--- | :--- |
+| **1** | **`gemini-2.5-flash`** | Standard Production Flash · High speed & deep reasoning | **Primary Engine**: Balanced for rigorous academic explanations and proofs |
+| **2** | **`gemini-2.5-flash-lite`** | High-Capacity Lightweight · Ultra-low latency | **First Fallback**: High-throughput tutoring when primary capacity fluctuates |
+| **3** | **`gemini-3.6-flash`** | Frontier Preview Tier · Deepest reasoning (20 RPD free cap) | **Advanced Fallback**: High-complexity conceptual problems |
+| **4** | **`gemini-2.0-flash`** | Standard Production Flash | **Legacy Fallback**: Long-standing backward-compatible endpoint |
+
+### Architecture & Resilience Highlights
+
 * **Automatic Multi-Model Failover:**
-  $$\text{gemini-2.0-flash (1,500 RPD)} \longrightarrow \text{gemini-1.5-flash (1,500 RPD)}$$
-  If a model ever encounters daily quota limits or temporary server load, the client seamlessly switches to the fallback model to keep your study session uninterrupted.
-* **Persistent `localStorage` Caching:** Once an explanation is fetched, it is saved permanently in your browser storage. Retaking quizzes, revisiting questions, or refreshing the page uses **0 API calls and 0 tokens**.
-* **Key Pool & Rotation:** Supports multiple API keys (comma- or space-separated). The engine automatically rotates to the next available key if quota exhaustion occurs.
-* **Full Key Format Compatibility:** Fully supports both legacy Google keys (`AIza...`) and the new Google AI Studio authentication keys (`AQ...`).
+  $$\text{gemini-2.5-flash} \longrightarrow \text{gemini-2.5-flash-lite} \longrightarrow \text{gemini-3.6-flash} \longrightarrow \text{gemini-2.0-flash}$$
+  If a model ever encounters daily quota limits (HTTP 429) or transient server load, the client seamlessly switches to the next available model in the sequence to keep your study session uninterrupted.
+* **Self-Healing `ListModels` Auto-Discovery:** If an account or regional endpoint returns an HTTP 404 for a specific model, the client queries Google's `ModelService.ListModels` API using your key, automatically identifies all live models that support `generateContent`, and dynamically injects them into the failover chain.
+* **Full Key Compatibility (`AQ.` and `AIza...`):** Automatically injects the required `x-goog-api-key` HTTP header with every request. Fully authenticates both Google's new official `AQ.` Auth Keys and legacy `AIza...` keys.
+* **Persistent `localStorage` Caching:** Once an explanation is fetched, it is saved permanently in your browser's private local storage. Retaking quizzes, revisiting questions, or refreshing the page consumes **0 API calls and 0 tokens**.
+* **Key Pool & Auto-Rotation:** Supports multiple API keys (comma- or space-separated). The engine automatically rotates to the next available key if quota exhaustion occurs.
 * **On/Off Quota Control:** Includes a global navbar toggle and per-course switches to pause AI explanations and preserve quota, with an on-demand *"Explain This Question Only"* option.
 
 ---
