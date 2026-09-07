@@ -14,10 +14,10 @@
 
   const GEMINI_CONFIG = Object.freeze({
     PRIMARY_MODELS: [
-      'gemini-2.5-flash',
-      'gemini-2.5-flash-lite',
-      'gemini-3.6-flash',
-      'gemini-2.0-flash'
+      'gemini-2.0-flash',
+      'gemini-2.0-flash-lite',
+      'gemini-1.5-flash',
+      'gemini-3.6-flash'
     ],
     TEMPERATURE: 0.2,
     MAX_OUTPUT_TOKENS: 8192,
@@ -27,10 +27,12 @@
   });
 
   let cachedDiscoveredModels = null;
+  const NON_TEXT_MODEL_REGEX = /(-tts|-audio|-speech|-embed|embedding|imagen|realtime|robotics|vision-only)/i;
 
   /**
    * Queries Google's ModelService.ListModels endpoint to discover active models
    * that support generateContent for this user's specific API key.
+   * Strictly filters out TTS/audio/embedding models to avoid parameter incompatibilities.
    * @param {string} apiKey
    * @returns {Promise<string[]|null>}
    */
@@ -49,20 +51,40 @@
       if (res.ok) {
         const data = await res.json();
         if (data && Array.isArray(data.models)) {
+          // Strictly filter for text models supporting generateContent, excluding TTS, audio, and embeddings
           const supported = data.models
-            .filter(m => Array.isArray(m.supportedGenerationMethods) && m.supportedGenerationMethods.includes('generateContent'))
+            .filter(m => 
+              Array.isArray(m.supportedGenerationMethods) && 
+              m.supportedGenerationMethods.includes('generateContent') &&
+              !NON_TEXT_MODEL_REGEX.test(m.name)
+            )
             .map(m => m.name.replace(/^models\//, ''));
 
-          // Prioritize Flash models first
+          // Preferred priority order for standard chat/text generation
+          const priority = [
+            'gemini-2.0-flash',
+            'gemini-2.0-flash-lite',
+            'gemini-1.5-flash',
+            'gemini-3.6-flash',
+            'gemini-1.5-flash-8b',
+            'gemini-1.5-pro'
+          ];
+
           supported.sort((a, b) => {
+            const idxA = priority.indexOf(a);
+            const idxB = priority.indexOf(b);
+            if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+            if (idxA !== -1) return -1;
+            if (idxB !== -1) return 1;
+
             const aFlash = a.toLowerCase().includes('flash');
             const bFlash = b.toLowerCase().includes('flash');
             if (aFlash && !bFlash) return -1;
             if (!aFlash && bFlash) return 1;
-            return 0;
+            return a.localeCompare(b);
           });
 
-          console.log('[GeminiAI] Discovered available models for key:', supported);
+          console.log('[GeminiAI] Discovered valid text generation models:', supported);
           cachedDiscoveredModels = supported;
           return supported;
         }
@@ -159,8 +181,8 @@ Result: ${resultLabel}`;
       maxOutputTokens: GEMINI_CONFIG.MAX_OUTPUT_TOKENS
     };
 
-    // Only apply thinkingConfig to models that officially support thinking budget
-    if (modelName && (modelName.includes('thinking') || modelName.includes('3.6') || modelName.includes('2.5'))) {
+    // Only apply thinkingConfig to models that explicitly feature 'thinking' in their model identifier
+    if (modelName && modelName.toLowerCase().includes('thinking')) {
       genConfig.thinkingConfig = {
         thinkingBudget: GEMINI_CONFIG.THINKING_BUDGET
       };
@@ -237,7 +259,7 @@ Result: ${resultLabel}`;
     // 3. Determine Model Failover Chain
     const preferredModel = (global.AppState && typeof global.AppState.getModelPreference === 'function')
       ? global.AppState.getModelPreference()
-      : 'gemini-2.5-flash';
+      : 'gemini-2.0-flash';
 
     // Build model chain starting with candidate models
     let modelChain = [...GEMINI_CONFIG.PRIMARY_MODELS];
@@ -343,10 +365,33 @@ Result: ${resultLabel}`;
             }
           }
 
-          // Auth errors (400, 401, 403)
-          if (response.status === 400 || response.status === 401 || response.status === 403) {
+          // Parameter or model mismatch errors (HTTP 400: e.g. unsupported parameter, rejection)
+          if (response.status === 400) {
             const errorJson = await response.json().catch(() => null);
-            console.error(`[GeminiAI] Auth/Client Error on ${currentModel}:`, response.status, errorJson);
+            const detailMsg = errorJson && errorJson.error && errorJson.error.message;
+            console.warn(`[GeminiAI] Model ${currentModel} returned 400 (Bad Request):`, detailMsg);
+
+            // Failover to next candidate model if available
+            if (mIdx + 1 < modelChain.length) {
+              failoverNoticeGiven = true;
+              continue; // Try next candidate model
+            }
+
+            if (kIdx + 1 < apiKeys.length) {
+              continue; // Try next key
+            }
+
+            return {
+              error: 'HTTP_ERROR',
+              status: 400,
+              message: detailMsg || `Model ${currentModel} could not process the request configuration.`
+            };
+          }
+
+          // Auth errors (401, 403)
+          if (response.status === 401 || response.status === 403) {
+            const errorJson = await response.json().catch(() => null);
+            console.error(`[GeminiAI] Auth Error on ${currentModel}:`, response.status, errorJson);
             if (kIdx + 1 < apiKeys.length) {
               continue; // Try next key if available
             }
