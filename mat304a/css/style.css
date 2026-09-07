@@ -14,6 +14,12 @@
    2. Design Tokens (:root)
    -------------------------------------------------------------------------- */
 :root {
+  /* Safe Area Insets for notched devices & Home Indicator */
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-left: env(safe-area-inset-left, 0px);
+  --safe-area-right: env(safe-area-inset-right, 0px);
+
   /* Canvas & Structural Substrates */
   --bg-primary: #070A10;          /* Deepest space obsidian */
   --bg-secondary: #0C101A;        /* Elevated canvas background */
@@ -1842,15 +1848,32 @@ footer p {
 }
 
 /* --------------------------------------------------------------------------
-   17. Responsive Breakpoints
+   17. Responsive Breakpoints & Tight Device Optimization (Apple HIG & Emil Craft)
    -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  #app-container {
+    padding: var(--spacing-md) var(--spacing-sm) calc(var(--spacing-xl) + var(--safe-area-bottom));
+  }
+}
+
 @media (max-width: 640px) {
   #app-container {
-    padding: var(--spacing-md) var(--spacing-sm) var(--spacing-2xl);
+    padding: var(--spacing-sm) var(--spacing-xs) calc(var(--spacing-xl) + var(--safe-area-bottom));
   }
 
   .card {
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-xs);
+    border-radius: var(--radius-md);
+  }
+
+  /* Sticky Quiz Header Compact Layout */
+  #quiz-header {
+    padding-top: var(--safe-area-top);
+  }
+
+  .header-inner {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    padding-right: 48px; /* Dedicated clearance for theme toggle button */
   }
 
   .header-brand-full {
@@ -1859,10 +1882,165 @@ footer p {
 
   .header-brand-short {
     display: inline;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .header-brand svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .header-stats {
+    gap: 4px;
+    font-size: 0.74rem;
+  }
+
+  .header-counter,
+  .header-score,
+  .header-difficulty-pill {
+    padding: 2px 6px;
+    font-size: 0.72rem;
+  }
+
+  /* Fixed Theme Toggle Button */
+  .theme-toggle-btn {
+    top: calc(8px + var(--safe-area-top));
+    right: calc(10px + var(--safe-area-right));
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-sm);
+    z-index: 250;
+  }
+
+  /* Welcome Screen */
+  .welcome-hero {
+    padding: var(--spacing-md) 0 var(--spacing-sm);
+  }
+
+  .welcome-hero h1 {
+    font-size: clamp(1.4rem, 5.5vw, 1.95rem);
+    line-height: 1.22;
+  }
+
+  .welcome-lead {
+    font-size: 0.86rem;
+    line-height: 1.5;
+  }
+
+  .domain-cloud {
+    gap: 4px;
+  }
+
+  .domain-pill {
+    font-size: 0.68rem;
+    padding: 2px 7px;
   }
 
   .briefing-grid {
     grid-template-columns: 1fr;
+    gap: var(--spacing-xs);
+  }
+
+  .difficulty-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xs);
+  }
+
+  .difficulty-card {
+    padding: 12px 14px;
+    min-height: 44px;
+  }
+
+  /* API Key Input Mobile */
+  .api-key-input-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .api-key-input-row .input-field {
+    font-size: 16px; /* Prevents iOS auto-zoom */
+    min-height: 44px;
+    padding: 10px 14px;
+  }
+
+  .api-key-input-row .btn {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  /* Primary Action Buttons (Thumb zone) */
+  #btn-start-quiz,
+  #btn-submit-answer,
+  #btn-next-question {
+    width: 100%;
+    min-height: 48px; /* Apple HIG standard thumb button */
+    font-size: 0.95rem;
+    justify-content: center;
+  }
+
+  /* Question Screen */
+  .question-card {
+    padding: var(--spacing-sm);
+  }
+
+  .question-text {
+    font-size: 0.96rem;
+    line-height: 1.5;
+  }
+
+  /* Choices (44px min tap area) */
+  .choices-grid {
+    gap: 8px;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .choice-card,
+  .choice-btn {
+    padding: 12px 14px;
+    min-height: 44px;
+    gap: 10px;
+    font-size: 0.88rem;
+  }
+
+  .choice-letter,
+  .choice-kbd {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    font-size: 0.74rem;
+  }
+
+  /* KaTeX Math Responsive Display */
+  .katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.5rem 0;
+    max-width: 100%;
+    scrollbar-width: thin;
+  }
+
+  .katex {
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  /* AI Explanation Box */
+  .ai-explanation-box {
+    padding: 12px 14px;
+  }
+
+  .ai-explanation-content {
+    font-size: 0.86rem;
+    line-height: 1.55;
+  }
+
+  /* Results Screen */
+  .results-summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
   }
 
   .missed-comparison {
@@ -1871,18 +2049,84 @@ footer p {
 
   .results-actions {
     flex-direction: column;
+    gap: 8px;
   }
 
   .results-actions .btn {
     width: 100%;
+    min-height: 46px;
+    justify-content: center;
   }
 
-  .theme-toggle-btn {
-    top: 12px;
-    right: 12px;
-    width: 32px;
-    height: 32px;
+  /* Modal */
+  .modal-dialog {
+    padding: var(--spacing-sm);
+    width: 96%;
+    max-height: calc(90dvh - var(--safe-area-top));
+    overflow-y: auto;
   }
+}
+
+@media (max-width: 420px) {
+  /* Ultra-compact devices (iPhone SE, smaller Androids) */
+  .header-top-row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .header-stats {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .header-counter {
+    order: 1;
+  }
+
+  .header-difficulty-pill {
+    order: 2;
+  }
+
+  .header-score {
+    order: 3;
+  }
+
+  .results-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .choice-card {
+    padding: 10px 12px;
+  }
+}
+
+/* Hover isolation to eliminate sticky touch states */
+@media (hover: hover) and (pointer: fine) {
+  .choice-card:hover:not(.disabled) {
+    background-color: var(--surface-elevated);
+    border-color: var(--border-strong);
+    transform: translateX(2px);
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .theme-toggle-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--border-strong);
+    background-color: var(--surface-hover);
+    transform: scale(1.05);
+  }
+}
+
+/* Tactile Active States (Emil Kowalski Craft) */
+.btn:active,
+.choice-card:active:not(.disabled),
+.theme-toggle-btn:active,
+.header-ai-toggle:active,
+.domain-pill:active {
+  transform: scale(0.96) !important;
 }
 
 /* --------------------------------------------------------------------------

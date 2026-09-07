@@ -1,4 +1,4 @@
-# 📚 StudyHub — 3rd Year Midterm Reviewers & Active Recall Studios
+# StudyHub — 3rd Year Midterm Reviewers & Active Recall Studios
 
 A unified, multi-course academic study portal and active recall studio designed for 3rd-year university midterm examinations.
 
@@ -6,20 +6,20 @@ Features high-yield question banks, step-by-step canonical proofs, KaTeX mathema
 
 ---
 
-## 🏛️ Course Reviewers Directory
+## Course Reviewers Directory
 
 | Course Code | Course Name | Status | Question Bank | Coverage & Features |
 | :--- | :--- | :---: | :---: | :--- |
-| **MCS 306** | **Introduction to Artificial Intelligence** | 🟢 **Live** | **50 Problems** | Russell & Norvig: Rational Agents, Graph Search, A\*, Alpha-Beta Pruning, CSPs, Propositional & First-Order Logic, KaTeX formulas, Gemini 2.0 Flash AI Tutor |
-| **MAT 304a** | **Operations Research I** | 🟢 **Live** | **70 Problems** | Hamdy A. Taha & Hillier-Lieberman: LP Formulations, Graphical Method, Simplex Tableau Mechanics ($c_j - z_j$), Big-M Penalty, Two-Phase Method, Sensitivity & Duality Analysis |
-| **MCS 305** | **Software Engineering** | 🟡 **In Curation** | Midterm Deck | Agile & Scrum, SDLC, GoF Design Patterns, Clean Architecture, CI/CD, Automated Testing Drills |
-| **MAT 301** | **Advanced Calculus 1** | 🟣 **Planned** | Midterm Deck | Real Analysis, Sequences & Series, Cauchy Convergence, Bolzano-Weierstrass, Metric Spaces |
-| **MAT 302** | **Modern Geometry** | 🟣 **Planned** | Midterm Deck | Axiomatic Systems, Non-Euclidean Geometry, Isometries, Hyperbolic Plane |
-| **TWM 301** | **Technical Writing in Mathematics** | 🟣 **Planned** | Midterm Deck | LaTeX Document Crafting, Proof Exposition, BibTeX References, Scientific Reports |
+| **MCS 306** | **Introduction to Artificial Intelligence** | `Live` | **50 Problems** | Russell & Norvig: Rational Agents, Graph Search, A\*, Alpha-Beta Pruning, CSPs, Propositional & First-Order Logic, KaTeX formulas, Gemini 2.0 Flash AI Tutor |
+| **MAT 304a** | **Operations Research I** | `Live` | **70 Problems** | Hamdy A. Taha & Hillier-Lieberman: LP Formulations, Graphical Method, Simplex Tableau Mechanics ($c_j - z_j$), Big-M Penalty, Two-Phase Method, Sensitivity & Duality Analysis |
+| **MCS 305** | **Software Engineering** | `In Curation` | Midterm Deck | Agile & Scrum, SDLC, GoF Design Patterns, Clean Architecture, CI/CD, Automated Testing Drills |
+| **MAT 301** | **Advanced Calculus 1** | `Planned` | Midterm Deck | Real Analysis, Sequences & Series, Cauchy Convergence, Bolzano-Weierstrass, Metric Spaces |
+| **MAT 302** | **Modern Geometry** | `Planned` | Midterm Deck | Axiomatic Systems, Non-Euclidean Geometry, Isometries, Hyperbolic Plane |
+| **TWM 301** | **Technical Writing in Mathematics** | `Planned` | Midterm Deck | LaTeX Document Crafting, Proof Exposition, BibTeX References, Scientific Reports |
 
 ---
 
-## 🤖 Google Gemini AI Architecture & Rate-Limit Hardening
+## Google Gemini AI Architecture & Rate-Limit Hardening
 
 The portal features an interactive AI Tutor providing rigorous, 3-section pedagogical explanations (Conceptual Proof, 3 Distractor Analyses, and Core Key Takeaway) with standard LaTeX math rendering.
 
@@ -36,7 +36,7 @@ The portal features an interactive AI Tutor providing rigorous, 3-section pedago
 
 ---
 
-## 🔑 How to Get Your Free Google Gemini API Key
+## How to Get Your Free Google Gemini API Key
 
 Access is **100% free with zero credit card required**:
 
@@ -49,7 +49,7 @@ Access is **100% free with zero credit card required**:
 
 ---
 
-## 🚀 Deployment (Vercel)
+## Deployment (Vercel)
 
 This repository is configured for instant zero-config deployment to **[Vercel](https://vercel.com)**:
 
@@ -65,7 +65,7 @@ Configured via [`vercel.json`](./vercel.json):
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```text
 306MIDTERM REVIEWER/
@@ -93,7 +93,7 @@ Configured via [`vercel.json`](./vercel.json):
 
 ---
 
-## 📜 License & Academic Integrity
+## License & Academic Integrity
 
 Educational use only. Designed for university students, study groups, and peer review.
 All curriculum alignments reference standard university textbooks (Stuart Russell & Peter Norvig for AI, Hamdy A. Taha and Hillier & Lieberman for Operations Research).

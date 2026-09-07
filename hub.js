@@ -44,7 +44,7 @@
       const current = document.documentElement.getAttribute('data-theme');
       const nextTheme = current === 'light' ? 'dark' : 'light';
       applyTheme(nextTheme);
-      showToast(`Switched to ${nextTheme === 'light' ? 'Light' : 'Dark'} mode`);
+      showToast(`Switched to ${nextTheme === 'light' ? 'Light' : 'Dark'} mode`, 'info');
     });
   }
 
@@ -200,7 +200,7 @@
     courseAiCheckboxes.forEach(cb => {
       cb.checked = enabled;
     });
-    showToast(enabled ? '✓ AI Explanations enabled across all courses' : '⏸️ AI Explanations disabled (Tokens preserved)');
+    showToast(enabled ? 'AI Explanations enabled across all courses' : 'AI Explanations disabled (Tokens preserved)', enabled ? 'success' : 'pause');
   }
 
   function setCourseAi(courseId, enabled) {
@@ -222,7 +222,7 @@
 
     updateAiUI(anyEnabled);
     const label = courseId.toUpperCase();
-    showToast(enabled ? `✓ ${label} AI explanations enabled` : `⏸️ ${label} AI explanations disabled (Tokens saved)`);
+    showToast(enabled ? `${label} AI explanations enabled` : `${label} AI explanations disabled (Tokens saved)`, enabled ? 'success' : 'pause');
   }
 
   if (hubAiToggle) {
@@ -270,22 +270,22 @@
       try {
         API_STORAGE_KEYS.forEach(k => localStorage.removeItem(k));
       } catch (e) {}
-      showToast('API key cleared');
+      showToast('API key cleared', 'info');
       closeModal();
       return;
     }
 
     if (key.length < 8) {
-      showToast('⚠️ Please enter a valid Gemini API key');
+      showToast('Please enter a valid Gemini API key', 'warning');
       return;
     }
 
     try {
       API_STORAGE_KEYS.forEach(k => localStorage.setItem(k, key));
-      showToast('✓ Gemini API Key saved locally!');
+      showToast('Gemini API Key saved locally!', 'success');
       closeModal();
     } catch (e) {
-      showToast('Error saving key to browser storage');
+      showToast('Error saving key to browser storage', 'warning');
     }
   }
 
@@ -336,14 +336,22 @@
   // Initialize AI Settings on page load
   loadAiSettings();
 
-  // --- Toast Notification ---
-  function showToast(message) {
+  // --- Toast Notification with SVG Icons ---
+  const TOAST_ICONS = {
+    success: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>',
+    pause: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>',
+    warning: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+    info: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+  };
+
+  function showToast(message, type = 'info') {
     const container = document.getElementById('toast-container');
     if (!container) return;
 
     const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.textContent = message;
+    toast.className = `toast toast-${type}`;
+    const iconSvg = TOAST_ICONS[type] || TOAST_ICONS.info;
+    toast.innerHTML = `<span class="toast-icon" aria-hidden="true">${iconSvg}</span><span class="toast-msg">${message}</span>`;
     container.appendChild(toast);
 
     setTimeout(() => {
