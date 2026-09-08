@@ -14,7 +14,9 @@ node_modules/
 # Internal development prompts & specifications
 prompts/
 */prompts/
+**/prompts/
 project_specification.md
+**/project_specification.md
 
 # Raw study material sources and dumps (PDFs, PPTs, text dumps, extraction JSONs)
 *.pdf
@@ -25,5 +27,8 @@ project_specification.md
 *.json
 !vercel.json
 
-# Raw course slide dumps
-mcs305/
+# Intermediate question bank authoring chunks, notes & tooling
+questions_m*.js
+*_notes.md
+*schema_definition.md
+validate_*.js

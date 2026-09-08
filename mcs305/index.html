@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="MCS 305 Systems Analysis and Design Midterm Reviewer & Cognitive Active Recall Studio with AI Tutor Co-Pilot.">
+  <title>MCS 305 · SAD Midterm Reviewer | Cognitive Active Recall Studio</title>
+
+  <!-- FOUC Prevention Script -->
+  <script>
+    (function() {
+      try {
+        var savedTheme = localStorage.getItem('MCS305_THEME') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      } catch(e) {}
+    })();
+  </script>
+
+  <!-- Google Fonts Preconnect & High-Performance Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
+  <!-- KaTeX High-Performance Math Typesetting for Feasibility / CBA Formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+
+  <!-- Single Consolidated Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Global Fixed Theme Switcher (Accessible across all screens) -->
+  <button type="button" id="btn-theme-toggle" class="theme-toggle-btn" aria-label="Toggle Light / Dark theme" title="Toggle visual theme">
+    <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4"/>
+      <path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+    </svg>
+    <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+    </svg>
+  </button>
+
+  <!-- Sticky Quiz & Review Progress Header -->
+  <header id="quiz-header" class="hidden" aria-label="Quiz Progress Header">
+    <div class="header-inner">
+      <div class="header-top-row">
+        <div class="header-brand">
+          <a href="../" class="header-hub-link" title="Return to StudyHub Suite" aria-label="Return to StudyHub Suite">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+          </a>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect width="18" height="18" x="3" y="3" rx="2"/>
+            <path d="M3 9h18"/>
+            <path d="M9 21V9"/>
+          </svg>
+          <span class="header-brand-full">MCS 305 · Systems Analysis &amp; Design Reviewer</span>
+          <span class="header-brand-short">MCS 305</span>
+        </div>
+        <div class="header-stats">
+          <button type="button" id="btn-header-ai-toggle" class="header-ai-toggle active" aria-label="Toggle AI Explanations" title="Click to toggle AI explanations (Preserve tokens)">
+            <span class="ai-dot" aria-hidden="true"></span>
+            <span id="header-ai-text">AI: ON</span>
+          </button>
+          <span id="header-difficulty-badge" class="header-difficulty-pill">Easy</span>
+          <span id="header-counter" class="header-counter">Question 1 of 210</span>
+          <span id="header-score" class="header-score">Score: 0 / 0</span>
+        </div>
+      </div>
+      <div class="progress-track" role="progressbar" aria-label="Quiz completion progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+        <div id="quiz-progress-bar" class="progress-fill" style="width: 0%;"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Container -->
+  <main id="app-container">
+
+    <!-- ====================================================================
+         Screen 1: Welcome & Setup Screen (Active on initial load)
+         ==================================================================== -->
+    <section id="welcome-screen" class="screen active" aria-labelledby="welcome-heading">
+      <div class="welcome-hero">
+        <div class="welcome-top-nav">
+          <a href="../" class="hub-back-btn" title="Return to Course Reviewers Hub">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+            <span>All Courses Hub</span>
+          </a>
+        </div>
+        <span class="badge badge-university">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="m9 12 2 2 4-4"/>
+          </svg>
+          MCS 305 · Academic Examination Suite
+        </span>
+        <h1 id="welcome-heading">MCS 305: Systems Analysis &amp; Design</h1>
+        <p class="welcome-lead">High-Yield Midterm Active Recall Studio &amp; Systems Architecture Practice Suite · 210 High-Yield Items Across 7 Modules</p>
+
+        <!-- Syllabus Domain Pill Cloud -->
+        <div class="domain-cloud" aria-label="Covered SAD syllabus topics">
+          <span class="domain-pill">M1: System Concepts</span>
+          <span class="domain-pill">M2: SDLC Strategies</span>
+          <span class="domain-pill">M3: Fact-Finding &amp; Elicitation</span>
+          <span class="domain-pill">M4: Process Models</span>
+          <span class="domain-pill">M5: Feasibility &amp; CBA</span>
+          <span class="domain-pill">M6: Requirements Eng</span>
+          <span class="domain-pill">M7: DFD Notations</span>
+        </div>
+      </div>
+
+      <!-- Exam Telemetry Dossier -->
+      <article class="instructions-box" aria-labelledby="briefing-heading">
+        <h3 id="briefing-heading">Midterm Review Protocol &amp; Systems Engineering Syllabus Architecture</h3>
+        <div class="briefing-grid">
+          <div class="briefing-item">
+            <div class="briefing-item-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+              210 Curated Problems
+            </div>
+            <p class="briefing-item-desc">Exhaustive question bank grounded in <em>Sommerville</em>, <em>Pressman</em>, and <em>Kendall &amp; Kendall</em> with 30 items per lesson across 3 calibrated tiers.</p>
+          </div>
+
+          <div class="briefing-item">
+            <div class="briefing-item-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m10 15 5-3-5-3v6Z"/></svg>
+              Active Recall Retrieval
+            </div>
+            <p class="briefing-item-desc">Reason through SDLC trade-offs and DFD balancing rules before committing your choice. True retention happens during effortful cognitive retrieval.</p>
+          </div>
+
+          <div class="briefing-item">
+            <div class="briefing-item-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+              Feasibility &amp; CBA Scratchpad
+            </div>
+            <p class="briefing-item-desc">Calculate <span class="math-expr">\text{ROI} = \frac{\text{Net Benefits}}{\text{Total Costs}}</span>, Payback Periods, and evaluate TELOS feasibility dimensions with KaTeX rendering.</p>
+          </div>
+
+          <div class="briefing-item">
+            <div class="briefing-item-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+              Neural Tutor Co-Pilot
+            </div>
+            <p class="briefing-item-desc">Equip a free Gemini API key to receive 3-part structured reasoning: Conceptual Proof, Exhaustive Distractor Analysis, and Textbook Citations.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Module Selection Grid -->
+      <section class="card settings-card" aria-labelledby="module-select-title">
+        <div class="settings-title">
+          <span id="module-select-title">Target Syllabus Module</span>
+          <span class="text-xs text-muted" style="font-family: var(--font-mono); font-weight: normal;">MODULE // SELECT</span>
+        </div>
+        <p class="form-helper" style="margin-top: 4px; margin-bottom: var(--spacing-md);">Select an individual syllabus domain to focus practice, or study the entire comprehensive exam scope:</p>
+
+        <div id="module-selector-grid" class="module-select-grid" role="radiogroup" aria-label="Syllabus module selection">
+          <!-- All Modules Card (Default) -->
+          <div class="topic-card active" data-module="all" role="radio" aria-checked="true" tabindex="0">
+            <div class="topic-card-header">
+              <span class="topic-card-id">ALL</span>
+              <span class="topic-card-count">210 Questions</span>
+            </div>
+            <div class="topic-card-title">Full Midterm Scope (All 7 Modules)</div>
+            <p class="topic-card-desc">Complete curriculum from Systems Theory to DFD Leveling &amp; Balancing.</p>
+          </div>
+
+          <!-- Module 1 -->
+          <div class="topic-card" data-module="M1" role="radio" aria-checked="false" tabindex="0">
+            <div class="topic-card-header">
+              <span class="topic-card-id">M1</span>
+              <span class="topic-card-count">30 Qs</span>
+            </div>
+            <div class="topic-card-title">System Concepts &amp; Analyst Roles</div>
+            <p class="topic-card-desc">Systems theory, open/closed systems, boundaries, feedback loops, analyst skill sets.</p>
+          </div>
+
+          <!-- Module 2 -->
+          <div class="topic-card" data-module="M2" role="radio" aria-checked="false" tabindex="0">
+            <div class="topic-card-header">
+              <span class="topic-card-id">M2</span>
+              <span class="topic-card-count">30 Qs</span>
+            </div>
+            <div class="topic-card-title">SDLC Strategies &amp; Lifecycles</div>
+            <p class="topic-card-desc">Core SDLC phases (PADIM), deliverables, gate reviews, structured vs OO analysis.</p>
+          </div>
+
+          <!-- Module 3 -->
+          <div class="topic-card" data-module="M3" role="radio" aria-checked="false" tabindex="0">
+            <div class="topic-card-header">
+              <span class="topic-card-id">M3</span>
+              <span class="topic-card-count">30 Qs</span>
+            </div>
+            <div class="topic-card-title">Fact-Finding &amp; Elicitation</div>
+            <p class="topic-card-desc">Interviews, Questionnaires, JAD sessions, Observation &amp; Hawthorne effect, Sampling.</p>
+          </div>
+
+          <!-- Module 4 -->
+          <div class="topic-card" data-module="M4" role="radio" aria-checked="false" tabindex="0">
+            <div class="topic-card-header">
+              <span class="topic-card-id">M4</span>
+              <span class="topic-card-count">30 Qs</span>
+            </div>
+            <div class="topic-card-title">Process Models &amp; Methodologies</div>
+            <p class="topic-card-desc">Waterfall, V-Model, Prototyping, Boehm's Spiral, Agile Manifesto, Scrum &amp; XP.</p>
+          </div>
+
+          <!-- Module 5 -->
+          <div class="topic-card" data-module="M5" role="radio" aria-checked="false" tabindex="0">
+            <div class="topic-card-header">
+              <span class="topic-card-id">M5</span>
+              <span class="topic-card-count">30 Qs</span>
+            </div>
+            <div class="topic-card-title">Project Planning &amp; Feasibility</div>
+            <p class="topic-card-desc">TELOS feasibility dimensions, Cost-Benefit Analysis, ROI, NPV, Payback period.</p>
+          </div>
+
+          <!-- Module 6 -->
+          <div class="topic-card" data-module="M6" role="radio" aria-checked="false" tabindex="0">
+            <div class="topic-card-header">
+              <span class="topic-card-id">M6</span>
+              <span class="topic-card-count">30 Qs</span>
+            </div>
+            <div class="topic-card-title">Requirements Engineering</div>
+            <p class="topic-card-desc">Functional vs Non-Functional (FURPS+), IEEE 830 SRS standards, traceability matrices.</p>
+          </div>
+
+          <!-- Module 7 -->
+          <div class="topic-card" data-module="M7" role="radio" aria-checked="false" tabindex="0">
+            <div class="topic-card-header">
+              <span class="topic-card-id">M7</span>
+              <span class="topic-card-count">30 Qs</span>
+            </div>
+            <div class="topic-card-title">Data Flow Diagrams (DFD)</div>
+            <p class="topic-card-desc">Gane &amp; Sarson vs Yourdon, Context Diagrams, Level-1/2, Black/Gray Holes, Miracles.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Configuration Vault Card -->
+      <div id="settings-panel" class="card settings-card">
+        <div class="settings-title">
+          <span>Session Parameters &amp; Modes</span>
+          <span class="text-xs text-muted" style="font-family: var(--font-mono); font-weight: normal;">SYSTEM // CONFIG</span>
+        </div>
+
+        <!-- Mode Selector (Practice vs Exam) -->
+        <div class="form-group">
+          <label class="form-label">Reviewer Operating Mode</label>
+          <div class="mode-select-row">
+            <div class="mode-card active" id="mode-practice" data-mode="practice" tabindex="0">
+              <div class="mode-card-title">Practice Mode (Cognitive Tutor)</div>
+              <p class="mode-card-desc">Immediate evaluation and instant AI tutor explanations after every single answered problem.</p>
+            </div>
+            <div class="mode-card" id="mode-exam" data-mode="exam" tabindex="0">
+              <div class="mode-card-title">Midterm Simulation Mode (Exam)</div>
+              <p class="mode-card-desc">Continuous examination flow with hidden feedback until submission; comprehensive results report at the end.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gemini API Key Input -->
+        <div class="form-group">
+          <div class="form-label-row">
+            <label for="api-key-input" class="form-label">Google Gemini API Key (Optional)</label>
+            <button type="button" id="btn-open-api-guide" class="btn-guide-link" aria-haspopup="dialog" aria-controls="api-key-guide-modal" title="View step-by-step guide to get a free API key">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+              <span>How to get free Gemini API Key?</span>
+            </button>
+          </div>
+          <div class="input-wrapper">
+            <input 
+              type="password" 
+              id="api-key-input" 
+              class="form-input" 
+              placeholder="Paste Gemini API key (e.g. AIza... or AQ...) · Unlocks AI tutoring" 
+              autocomplete="off" 
+              spellcheck="false"
+              aria-describedby="api-key-helper"
+            ><button type="button" id="btn-toggle-api-key" class="input-toggle-btn" aria-label="Toggle API Key visibility">Show</button>
+          </div>
+          <div class="api-key-helper-row">
+            <span class="form-helper" id="api-key-helper">Stored securely in local client storage. Zero third-party server intermediary.</span>
+            <button type="button" id="btn-open-api-guide-text" class="link-inline-guide">Need a free key? Follow 60-second setup guide &rarr;</button>
+          </div>
+        </div>
+
+        <!-- AI Tutoring & Token Preservation Toggle -->
+        <div class="form-group ai-setting-group">
+          <div class="ai-setting-card">
+            <div class="ai-setting-info">
+              <div class="ai-setting-title-row">
+                <label for="ai-toggle-input" class="form-label" style="margin-bottom: 0; cursor: pointer;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                  Automated AI Explanations
+                </label>
+                <span id="ai-setting-status-badge" class="badge-ai-status active">Tokens Active</span>
+              </div>
+              <p class="form-helper" style="margin-top: 4px; margin-bottom: 0;">
+                Generate in-depth step-by-step cognitive explanations after each problem. Turn off to run 100% offline and preserve your free Gemini API tokens.
+              </p>
+            </div>
+            <label class="switch-control" for="ai-toggle-input" aria-label="Toggle AI Explanations for MCS 305">
+              <input type="checkbox" id="ai-toggle-input" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Difficulty Mode Selector -->
+        <div class="form-group difficulty-form-group">
+          <div class="difficulty-header-row">
+            <label class="form-label" id="difficulty-group-label" style="margin-bottom: 0;">Question Difficulty Distribution</label>
+            <span class="text-xs text-muted" style="font-family: var(--font-mono);">CHALLENGE TIER</span>
+          </div>
+          <span class="form-helper" style="margin-top: 4px; margin-bottom: var(--spacing-sm);">Select question tier to test foundational definitions, applied methodology, or architectural diagnostics:</span>
+
+          <div class="difficulty-grid" role="radiogroup" aria-labelledby="difficulty-group-label">
+            <!-- All Difficulties -->
+            <label class="difficulty-card active" for="diff-all">
+              <input type="radio" name="difficulty-choice" id="diff-all" value="all" checked>
+              <div class="difficulty-card-content">
+                <div class="diff-title-row">
+                  <span class="diff-badge diff-badge-easy">Balanced</span>
+                  <span class="diff-icon-symbol">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                    <span>All Tiers</span>
+                  </span>
+                </div>
+                <div class="diff-name">Comprehensive Mix</div>
+                <p class="diff-desc">Equal distribution of Easy, Medium, and Hard items mirroring actual BulSU exam blueprint.</p>
+              </div>
+            </label>
+
+            <!-- Easy Mode -->
+            <label class="difficulty-card" for="diff-easy">
+              <input type="radio" name="difficulty-choice" id="diff-easy" value="easy">
+              <div class="difficulty-card-content">
+                <div class="diff-title-row">
+                  <span class="diff-badge diff-badge-easy">Easy</span>
+                  <span class="diff-icon-symbol">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg>
+                    <span>Tier 1</span>
+                  </span>
+                </div>
+                <div class="diff-name">Core Fundamentals</div>
+                <p class="diff-desc">Definitions, phase sequences, terminology, acronyms, and canonical SAD principles.</p>
+              </div>
+            </label>
+
+            <!-- Medium Mode -->
+            <label class="difficulty-card" for="diff-medium">
+              <input type="radio" name="difficulty-choice" id="diff-medium" value="medium">
+              <div class="difficulty-card-content">
+                <div class="diff-title-row">
+                  <span class="diff-badge diff-badge-medium">Medium</span>
+                  <span class="diff-icon-symbol">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+                    <span>Tier 2</span>
+                  </span>
+                </div>
+                <div class="diff-name">Applied Analysis</div>
+                <p class="diff-desc">Distinction between elicitation trade-offs, DFD syntax traps, and requirement classifications.</p>
+              </div>
+            </label>
+
+            <!-- Hard Mode -->
+            <label class="difficulty-card" for="diff-hard">
+              <input type="radio" name="difficulty-choice" id="diff-hard" value="hard">
+              <div class="difficulty-card-content">
+                <div class="diff-title-row">
+                  <span class="diff-badge diff-badge-hard">Hard</span>
+                  <span class="diff-icon-symbol">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    <span>Tier 3</span>
+                  </span>
+                </div>
+                <div class="diff-name">Complex Scenarios</div>
+                <p class="diff-desc">Multi-variable SDLC model selection, architectural trade-offs, and financial feasibility calculations.</p>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Start Action Button -->
+      <div class="text-center">
+        <button type="button" id="btn-start-quiz" class="btn btn-primary btn-lg btn-block">
+          <span>Launch Midterm Review Session</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         Screen 2: Active Quiz Question Screen (Hidden initially)
+         ==================================================================== -->
+    <section id="quiz-screen" class="screen hidden" aria-labelledby="quiz-question-text">
+      <!-- Active Question Card -->
+      <article class="card question-card">
+        <div class="question-header-row">
+          <div class="question-meta-group">
+            <span id="quiz-topic-badge" class="badge badge-topic">Module Name</span>
+            <span id="quiz-difficulty-badge" class="badge badge-difficulty diff-easy">Easy</span>
+            <span id="quiz-question-index-label" class="text-xs text-muted" style="font-family: var(--font-mono);">Question #</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button type="button" id="btn-bookmark-question" class="bookmark-btn" aria-label="Bookmark question for review" title="Bookmark question">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </button>
+            <div class="keyboard-hint-pill" title="Keyboard selection supported">
+              <span>Keys:</span>
+              <kbd>1-4</kbd> / <kbd>A-D</kbd>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question Stem -->
+        <p id="quiz-question-text" class="question-stem">Question text loading...</p>
+
+        <!-- 4 Choices Grid (a, b, c, d) -->
+        <div id="quiz-choices-grid" class="choices-grid options-grid" role="radiogroup" aria-label="Answer options">
+          <!-- Populated dynamically by JavaScript -->
+        </div>
+
+        <!-- Action Bar: Submit Answer Button -->
+        <div class="quiz-actions">
+          <button type="button" id="btn-prev-question" class="btn btn-secondary hidden">
+            <span>&larr; Previous</span>
+          </button>
+          <button type="button" id="btn-submit-answer" class="btn btn-primary hidden">
+            <span>Submit Verification</span>
+            <kbd style="background: rgba(0,0,0,0.25); border-color: rgba(0,0,0,0.3); color: #070A10; margin-left: 4px;">Enter ↵</kbd>
+          </button>
+        </div>
+      </article>
+
+      <!-- Feedback Panel (Shown immediately after submitting answer) -->
+      <section id="feedback-panel" class="feedback-panel hidden" aria-live="polite">
+        <div class="feedback-header">
+          <div id="feedback-status" class="feedback-status">
+            <!-- Populated dynamically with SVG icon and status label -->
+          </div>
+          <div id="feedback-correct-answer" class="feedback-correct-callout">
+            <!-- Shows correct answer when incorrect -->
+          </div>
+        </div>
+
+        <!-- AI Tutor Co-Pilot Explanation Box -->
+        <div id="ai-explanation-box" class="ai-explanation-box tutor-explanation-card">
+          <div class="ai-explanation-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+            </svg>
+            <span>Distinguished Professor · Systems Engineering Proof</span>
+          </div>
+
+          <!-- Content container: skeleton loader or rich structured explanation -->
+          <div id="ai-explanation-content" class="ai-explanation-content">
+            <div class="skeleton-loader">
+              <div class="skeleton-line w-80"></div>
+              <div class="skeleton-line w-90"></div>
+              <div class="skeleton-line w-60"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Token-Saving Paused State Container -->
+        <div id="ai-paused-box" class="ai-paused-container hidden">
+          <div class="ai-paused-main">
+            <div class="ai-paused-badge">
+              <span class="pulse-dot-amber" aria-hidden="true"></span>
+              <span>AI Token Preserver Active</span>
+            </div>
+            <p class="ai-paused-desc">AI explanation generation is currently paused to preserve your quota tokens. You can generate an on-demand analysis for this item or resume automatic tutoring.</p>
+          </div>
+          <div class="ai-paused-actions">
+            <button type="button" id="btn-explain-once" class="btn-explain-once">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg>
+              <span>Explain with AI On-Demand</span>
+            </button>
+            <button type="button" id="btn-resume-ai-link" class="btn-resume-ai-link">Resume Auto-Tutoring</button>
+          </div>
+        </div>
+
+        <!-- Next Question Navigation Button -->
+        <div class="text-right" style="margin-top: var(--spacing-md);">
+          <button type="button" id="btn-next-question" class="btn btn-primary">
+            <span>Advance to Next Problem</span>
+            <kbd style="background: rgba(0,0,0,0.25); border-color: rgba(0,0,0,0.3); color: #070A10; margin-left: 4px;">Enter ↵</kbd>
+          </button>
+        </div>
+      </section>
+    </section>
+
+    <!-- ====================================================================
+         Screen 3: Results & Analytics Screen (Hidden initially)
+         ==================================================================== -->
+    <section id="results-screen" class="screen hidden" aria-labelledby="results-title">
+      <div class="card score-hero results-hero">
+        <h2 id="results-title" class="text-xs text-muted" style="text-transform: uppercase; letter-spacing: 0.08em; font-family: var(--font-mono); font-weight: 600; margin-bottom: 12px;">Evaluation Telemetry Report</h2>
+        <div class="grade-hero-circle">
+          <div id="results-grade-circle">A</div>
+        </div>
+        <div id="results-score" class="results-score-display">0 / 210</div>
+        <div id="results-percentage" class="results-percentage">0% Accuracy</div>
+        <div id="results-grade" class="badge results-grade-badge">Pending Evaluation</div>
+        <div id="results-difficulty-tag" class="results-difficulty-tag" style="margin-top: 10px;">
+          <span class="badge badge-difficulty">Scope: Full Syllabus</span>
+        </div>
+        <p id="results-message" class="text-secondary" style="margin-top: 16px; max-width: 540px; margin-left: auto; margin-right: auto; line-height: 1.55;"></p>
+      </div>
+
+      <!-- Performance Summary Cards -->
+      <div class="results-summary-grid">
+        <div class="summary-card">
+          <div id="stat-correct" class="summary-card-value">0</div>
+          <div class="summary-card-label">Correct Answers</div>
+        </div>
+        <div class="summary-card">
+          <div id="stat-accuracy" class="summary-card-value">0%</div>
+          <div class="summary-card-label">Accuracy Rate</div>
+        </div>
+        <div class="summary-card">
+          <div id="stat-streak" class="summary-card-value">0</div>
+          <div class="summary-card-label">Longest Streak</div>
+        </div>
+        <div class="summary-card">
+          <div id="stat-time" class="summary-card-value">00:00</div>
+          <div class="summary-card-label">Time Elapsed</div>
+        </div>
+      </div>
+
+      <!-- 7-Module Syllabus Mastery Analytics Breakdown -->
+      <section class="card topic-breakdown-card mastery-breakdown-card" aria-labelledby="topic-breakdown-heading">
+        <h3 id="topic-breakdown-heading" style="margin-bottom: 6px;">7-Module Systems Architecture Mastery Breakdown</h3>
+        <p class="text-sm text-secondary" style="margin-bottom: var(--spacing-md);">Pinpoint exact syllabus domains requiring focused textbook review prior to midterm examination day:</p>
+        <div id="topic-breakdown-list" class="mastery-bars-grid">
+          <!-- Populated dynamically by JavaScript -->
+        </div>
+      </section>
+
+      <!-- Results Action Buttons -->
+      <div class="results-actions">
+        <button type="button" id="btn-review-mistakes" class="btn btn-secondary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          <span>Review Missed Problems</span>
+        </button>
+        <button type="button" id="btn-review-all" class="btn btn-secondary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect width="18" height="18" x="3" y="3" rx="2"/>
+            <path d="M9 3v18"/>
+          </svg>
+          <span>Review All Questions</span>
+        </button>
+        <button type="button" id="btn-restart-quiz" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="1 4 1 10 7 10"/>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+          </svg>
+          <span>Retake Quiz Session</span>
+        </button>
+        <button type="button" id="btn-return-home" class="btn btn-secondary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          <span>Return to Setup</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         Screen 4: Review Screen (Hidden initially)
+         ==================================================================== -->
+    <section id="review-screen" class="screen hidden" aria-labelledby="review-title">
+      <div class="review-header">
+        <div class="review-header-row">
+          <div>
+            <h2 id="review-title">Review Studio</h2>
+            <p class="text-secondary">Inspect selections, canonical textbook rationales, and deep distractor refutations.</p>
+          </div>
+          <!-- Filter Dropdown -->
+          <div>
+            <select id="review-filter-select" class="review-filter-dropdown" aria-label="Filter review problems">
+              <option value="all">All Answered Questions</option>
+              <option value="missed" selected>Missed Questions Only</option>
+              <option value="starred">Starred / Bookmarked Only</option>
+              <option value="M1">Module 1: System Concepts</option>
+              <option value="M2">Module 2: SDLC Strategies</option>
+              <option value="M3">Module 3: Fact-Finding</option>
+              <option value="M4">Module 4: Process Models</option>
+              <option value="M5">Module 5: Feasibility &amp; CBA</option>
+              <option value="M6">Module 6: Requirements Eng</option>
+              <option value="M7">Module 7: DFD Notations</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- List of question review cards -->
+      <div id="review-list" class="review-list missed-list">
+        <!-- Populated dynamically by JavaScript -->
+      </div>
+
+      <div class="text-center" style="margin-top: var(--spacing-xl);">
+        <button type="button" id="btn-back-to-results" class="btn btn-secondary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          <span>Back to Performance Summary</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Institutional Footer -->
+  <footer>
+    <p>MCS 305: Systems Analysis &amp; Design · Midterm Examination Reviewer</p>
+    <p class="text-xs text-muted" style="margin-top: 4px; font-family: var(--font-mono);">Bulacan State University · Active Recall &amp; Cognitive Tutoring Studio</p>
+  </footer>
+
+  <!-- ====================================================================
+       Google Gemini API Key Step-by-Step Guide Modal
+       ==================================================================== -->
+  <div id="api-key-guide-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="guide-modal-title" aria-hidden="true">
+    <div class="modal-dialog card" role="document">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="badge badge-university" style="margin-bottom: 4px;">Google AI Studio · Quick Guide</span>
+          <h2 id="guide-modal-title" class="modal-title">How to Get Free Google Gemini API Key</h2>
+        </div>
+        <button type="button" id="btn-close-guide-modal" class="btn-close-modal" aria-label="Close API Key Guide">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-lead">Google provides free access to Gemini API models for students, educators, and developers. You can generate your personal key in under 60 seconds with no credit card required:</p>
+
+        <!-- Step List -->
+        <ol class="guide-steps-list">
+          <li class="guide-step-item">
+            <div class="step-badge">1</div>
+            <div class="step-content">
+              <h4>Sign in to Google AI Studio</h4>
+              <p>Navigate to Google's developer console at <strong style="color: var(--text-primary);">aistudio.google.com/app/apikey</strong> and sign in using your standard Google or university account.</p>
+              <div class="step-action">
+                <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm link-btn-external">
+                  <span>Open Google AI Studio Console</span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="guide-step-item">
+            <div class="step-badge">2</div>
+            <div class="step-content">
+              <h4>Click "Create API Key"</h4>
+              <p>Once inside the console dashboard, click the blue <strong style="color: var(--text-primary);">"Create API key"</strong> button.</p>
+            </div>
+          </li>
+
+          <li class="guide-step-item">
+            <div class="step-badge">3</div>
+            <div class="step-content">
+              <h4>Select Project &amp; Generate</h4>
+              <p>Select your Google Cloud project (or default workspace), then click <strong style="color: var(--text-primary);">"Create key in existing project"</strong>. The free tier activates immediately with zero billing setup.</p>
+            </div>
+          </li>
+
+          <li class="guide-step-item">
+            <div class="step-badge">4</div>
+            <div class="step-content">
+              <h4>Copy Your Key &amp; Paste in Reviewer</h4>
+              <p>Copy the generated key string (starting with <code>AIza...</code> or <code>AQ...</code>). Return here and paste it into the <strong>Google Gemini API Key</strong> input box on the welcome screen.</p>
+            </div>
+          </li>
+        </ol>
+
+        <!-- Informational Callouts Grid -->
+        <div class="guide-notes-grid">
+          <div class="guide-note-card">
+            <div class="guide-note-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+              <span>Generous 1,500 RPD Quota</span>
+            </div>
+            <p>Gemini 2.5 Flash and 2.0 Flash free tiers grant 15 requests per minute and 1,500 requests per day with automatic caching — ample for full 210-question practice runs.</p>
+          </div>
+
+          <div class="guide-note-card">
+            <div class="guide-note-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span>Client-Side Security</span>
+            </div>
+            <p>Your API key is saved exclusively in your browser's local storage (<code class="formula">localStorage</code>). It connects directly to Google's official endpoints with zero intermediate logging.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" id="btn-dismiss-guide-modal" class="btn btn-primary">
+          <span>I've Got It, Back to Reviewer</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notification System -->
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Standardized Script Loading Order (Parity with StudyHub Architecture) -->
+  <script src="data/questions.js"></script>
+  <script src="js/math.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/feedback.js"></script>
+  <script src="js/results.js"></script>
+  <script src="js/review.js"></script>
+
+</body>
+</html>

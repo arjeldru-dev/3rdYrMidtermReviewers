@@ -12,7 +12,7 @@ Features high-yield question banks, step-by-step canonical proofs, KaTeX mathema
 | :--- | :--- | :---: | :---: | :--- |
 | **MCS 306** | **Introduction to Artificial Intelligence** | `Live` | **50 Problems** | Russell & Norvig: Rational Agents, Graph Search, A\*, Alpha-Beta Pruning, CSPs, Propositional & First-Order Logic, KaTeX formulas, Gemini Flash AI Tutor |
 | **MAT 304a** | **Operations Research I** | `Live` | **70 Problems** | Hamdy A. Taha & Hillier-Lieberman: LP Formulations, Graphical Method, Simplex Tableau Mechanics ($c_j - z_j$), Big-M Penalty, Two-Phase Method, Sensitivity & Duality Analysis, KaTeX Tableaux, Gemini Flash AI Tutor |
-| **MCS 305** | **Software Engineering** | `In Curation` | Midterm Deck | Agile & Scrum, SDLC, GoF Design Patterns, Clean Architecture, CI/CD, Automated Testing Drills |
+| **MCS 305** | **Systems Analysis and Design** | `Live` | **210 Problems** | Kendall & Kendall, Dennis, Wixom & Roth, Sommerville, Pressman: Systems Concepts, SDLC Lifecycles (PADIM), Fact-Finding & Investigation, Process Models (Agile/Scrum, Waterfall, Prototyping, Spiral), TELOS Feasibility & Cost-Benefit Analysis (ROI, NPV, Payback), Requirements Engineering (FURPS+, IEEE 830), DFD Leveling & Balancing, KaTeX economic formulas, Gemini Flash AI Tutor, Topic Mastery Analytics |
 | **MAT 301** | **Advanced Calculus 1** | `Planned` | Midterm Deck | Real Analysis, Sequences & Series, Cauchy Convergence, Bolzano-Weierstrass, Metric Spaces |
 | **MAT 302** | **Modern Geometry** | `Planned` | Midterm Deck | Axiomatic Systems, Non-Euclidean Geometry, Isometries, Hyperbolic Plane |
 | **TWM 301** | **Technical Writing in Mathematics** | `Planned` | Midterm Deck | LaTeX Document Crafting, Proof Exposition, BibTeX References, Scientific Reports |
@@ -73,6 +73,7 @@ Configured via [`vercel.json`](./vercel.json):
 * **Portal Hub:** `https://<your-app>.vercel.app/`
 * **MCS 306 Reviewer:** `https://<your-app>.vercel.app/mcs306`
 * **MAT 304a Reviewer:** `https://<your-app>.vercel.app/mat304a`
+* **MCS 305 Reviewer:** `https://<your-app>.vercel.app/mcs305`
 
 ---
 
@@ -86,20 +87,44 @@ Configured via [`vercel.json`](./vercel.json):
 ├── vercel.json              # Clean URLs and deployment routing configuration
 ├── README.md                # Project documentation & guides
 ├── mcs306/                  # Introduction to Artificial Intelligence (50 Qs)
-│   ├── index.html           # Single-page active recall app (Welcome, Quiz, Results, Review)
+│   ├── index.html           # Single-page active recall studio (Welcome, Quiz, Results, Review)
 │   ├── css/style.css        # Studio design system, LaTeX math layout, dark/light themes
 │   ├── js/
-│   │   ├── state.js         # State machine, persistent localStorage cache, difficulty modes
-│   │   ├── ai.js            # Gemini 2.0 Flash client with 1.5 failover & backoff
-│   │   ├── quiz.js          # Question presentation, keyboard shortcuts, KaTeX rendering
-│   │   ├── feedback.js      # Immediate solution breakdown & hardened error recovery
-│   │   └── review.js        # Post-exam review drawer & conceptual resolution
-│   └── data/questions.js    # 50 verified multiple-choice questions aligned with Russell & Norvig
-└── mat304a/                 # Operations Research I (70 Qs)
-    ├── index.html           # Dedicated Operations Research active recall studio
-    ├── css/style.css        # Math-tailored styling, simplex tableau formatting
-    ├── js/                  # State, AI client, feedback, and review engines
-    └── data/questions.js    # 70 verified LP & simplex optimization questions
+│   │   ├── ai.js            # Gemini 2.0 Flash client with auto-failover & persistent caching
+│   │   ├── feedback.js      # Immediate pedagogical breakdown (Proof, Distractors, Takeaway)
+│   │   ├── math.js          # KaTeX typesetting engine for logic formulas and heuristics
+│   │   ├── progress.js      # Live progress indicator, streak tracking, header metrics
+│   │   ├── quiz.js          # Question presentation, keyboard shortcuts, option selection
+│   │   ├── results.js       # Diagnostic score breakdown & performance analytics
+│   │   ├── review.js        # Post-exam review drawer and mistakes filter
+│   │   └── state.js         # Reactive state machine, exam modes, localStorage persistence
+│   └── data/questions.js    # 50 verified multiple-choice questions (Russell & Norvig)
+├── mat304a/                 # Operations Research I (70 Qs)
+│   ├── index.html           # Single-page active recall studio (Welcome, Quiz, Results, Review)
+│   ├── css/style.css        # Math-tailored styling, simplex tableau formatting, dark/light themes
+│   ├── js/
+│   │   ├── ai.js            # Gemini 2.0 Flash client with auto-failover & persistent caching
+│   │   ├── feedback.js      # Immediate pedagogical breakdown (Proof, Distractors, Takeaway)
+│   │   ├── math.js          # KaTeX typesetting engine for LP equations and simplex matrices
+│   │   ├── progress.js      # Live progress indicator, streak tracking, header metrics
+│   │   ├── quiz.js          # Question presentation, keyboard shortcuts, option selection
+│   │   ├── results.js       # Diagnostic score breakdown & performance analytics
+│   │   ├── review.js        # Post-exam review drawer and mistakes filter
+│   │   └── state.js         # Reactive state machine, exam modes, localStorage persistence
+│   └── data/questions.js    # 70 verified multiple-choice questions (Taha, Hillier & Lieberman)
+└── mcs305/                  # Systems Analysis and Design (210 Qs across 7 Modules)
+    ├── index.html           # Single-page active recall studio (Welcome, Quiz, Results, Review)
+    ├── css/style.css        # Studio design system, responsive dark/light theme, KaTeX formulas
+    ├── js/
+    │   ├── ai.js            # Gemini 2.0 Flash client with auto-failover & persistent caching
+    │   ├── feedback.js      # Immediate pedagogical breakdown (Proof, Distractors, Takeaway)
+    │   ├── math.js          # KaTeX typesetting engine for CBA, ROI, and NPV equations
+    │   ├── progress.js      # Live progress indicator, streak tracking, header metrics
+    │   ├── quiz.js          # Question presentation, keyboard shortcuts, option selection
+    │   ├── results.js       # Diagnostic score breakdown & 7-module topic mastery analytics
+    │   ├── review.js        # Post-exam review drawer and mistakes filter
+    │   └── state.js         # Reactive state machine, exam modes, localStorage persistence
+    └── data/questions.js    # 210 verified questions across 7 modules (Kendall & Kendall, Dennis)
 ```
 
 ---
@@ -107,4 +132,7 @@ Configured via [`vercel.json`](./vercel.json):
 ## License & Academic Integrity
 
 Educational use only. Designed for university students, study groups, and peer review.
-All curriculum alignments reference standard university textbooks (Stuart Russell & Peter Norvig for AI, Hamdy A. Taha and Hillier & Lieberman for Operations Research).
+All curriculum alignments reference standard university textbooks:
+* **MCS 306**: Stuart Russell & Peter Norvig, *Artificial Intelligence: A Modern Approach*.
+* **MAT 304a**: Hamdy A. Taha, *Operations Research: An Introduction*; Frederick S. Hillier & Gerald J. Lieberman, *Introduction to Operations Research*.
+* **MCS 305**: Kenneth E. Kendall & Julie E. Kendall, *Systems Analysis and Design*; Alan Dennis, Barbara Haley Wixom, & Roberta M. Roth, *Systems Analysis and Design*; Ian Sommerville, *Software Engineering*; Roger S. Pressman & Bruce R. Maxim, *Software Engineering: A Practitioner's Approach*.
