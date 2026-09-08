@@ -1,5 +1,5 @@
 /**
- * MCS 305: Systems Analysis and Design — Progress Header & Live Score Tracker
+ * MCS 305: Software Engineering — Progress Header & Live Score Tracker
  * 
  * Manages:
  * - Real-time sticky header synchronization across all quiz and evaluation states

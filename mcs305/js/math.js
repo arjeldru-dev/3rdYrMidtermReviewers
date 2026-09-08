@@ -1,5 +1,5 @@
 /**
- * MCS 305: Systems Analysis and Design — Mathematical Typesetting & LaTeX Engine
+ * MCS 305: Software Engineering — Mathematical Typesetting & LaTeX Engine
  * 
  * Provides:
  * - KaTeX rendering for LaTeX display equations ($$...$$, \[...\]) and inline math ($...$, \(...\))
@@ -166,7 +166,7 @@
    * Handles:
    * 1. LaTeX display blocks: $$...$$ or \[...\]
    * 2. LaTeX inline formulas: $...$ or \(...\)
-   * 3. Systems Analysis Feasibility, ROI, NPV, CBA, DFD notations, and KaTeX rendering
+   * 3. Software Engineering Feasibility, ROI, NPV, CBA, DFD notations, and KaTeX rendering
    * 
    * @param {string} input - Raw text string
    * @returns {string} HTML with rendered math

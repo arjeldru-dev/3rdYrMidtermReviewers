@@ -1,5 +1,5 @@
 /**
- * MCS 305: Systems Analysis and Design — Dedicated Review Studio & Mistakes Filter Engine
+ * MCS 305: Software Engineering — Dedicated Review Studio & Mistakes Filter Engine
  * 
  * Manages:
  * - Dedicated full-screen review interface (#review-screen) mapped to FSM STATES.REVIEW
@@ -324,7 +324,7 @@
 
       if (mode === 'missed') {
         emptyTitle = 'Flawless Mastery! Zero Missed Questions';
-        emptyDesc = 'You answered every question in this session correctly. Outstanding systems analysis command!';
+        emptyDesc = 'You answered every question in this session correctly. Outstanding software engineering command!';
         emptyIconSvg = '<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>';
       } else if (mode === 'starred') {
         emptyTitle = 'No Bookmarked Questions Yet';

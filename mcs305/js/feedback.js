@@ -1,5 +1,5 @@
 /**
- * MCS 305: Systems Analysis and Design — Feedback & Immediate Grading Engine
+ * MCS 305: Software Engineering — Feedback & Immediate Grading Engine
  * 
  * Manages:
  * - Immediate answer evaluation, visual styling (.correct, .incorrect, .dimmed, .disabled)
@@ -730,7 +730,7 @@
               <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
               <polyline points="22 4 12 14.01 9 11.01"/>
             </svg>
-            <span>Correct! Accurate Systems Analysis</span>
+            <span>Correct! Accurate Software Engineering</span>
           </div>
         `;
       } else {

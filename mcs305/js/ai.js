@@ -1,5 +1,5 @@
 /**
- * MCS 305: Systems Analysis and Design — Google Gemini REST API Client & Neural Tutor
+ * MCS 305: Software Engineering — Google Gemini REST API Client & Neural Tutor
  * 
  * Manages:
  * - Direct client-side browser communication with Google Gemini REST API v1beta
@@ -45,7 +45,7 @@
   // 2. Academic Pedagogical System Prompt (Sommerville & Pressman Aligned)
   // ==========================================================================
 
-  const SYSTEM_PROMPT = `You are a Distinguished Professor of Systems Analysis and Software Engineering teaching MCS 305 — Systems Analysis and Design. A student just answered a multiple-choice question.
+  const SYSTEM_PROMPT = `You are a Distinguished Professor of Systems Analysis and Software Engineering teaching MCS 305 — Software Engineering. A student just answered a multiple-choice question.
 
 You MUST provide a COMPLETE, fully finished explanation covering ALL THREE sections below without omitting, truncating, or skipping any section:
 
@@ -95,8 +95,8 @@ OUTPUT INTEGRITY RULES (FULL-OUTPUT ENFORCEMENT):
 Analyze this midterm examination question and provide a rigorous, authoritative pedagogical explanation.
 
 CONTEXT & QUESTION:
-- Module: ${question.lessonId || ''} (${question.lessonTitle || 'Systems Analysis'})
-- Topic: ${question.topic || 'General SAD'}
+- Module: ${question.lessonId || ''} (${question.lessonTitle || 'Software Engineering'})
+- Topic: ${question.topic || 'General Software Engineering'}
 - Question: "${question.question || ''}"
 - Choices:
   A: "${choices.a || ''}"

@@ -1,5 +1,5 @@
 /**
- * MCS 305: Systems Analysis and Design — Results & 7-Module Mastery Analytics Engine
+ * MCS 305: Software Engineering — Results & 7-Module Mastery Analytics Engine
  * 
  * Manages:
  * - Deterministic score and accuracy percentage computation
@@ -77,7 +77,7 @@
       label: 'A+ (Summa Cum Laude / Outstanding)',
       shortLabel: 'Summa Cum Laude',
       className: 'grade-excellent',
-      tip: 'Phenomenal mastery! You demonstrated comprehensive command of all Systems Analysis & Design domains from General Systems Theory to DFD Leveling and Financial Feasibility.'
+      tip: 'Phenomenal mastery! You demonstrated comprehensive command of all Software Engineering domains from General Systems Theory to DFD Leveling and Financial Feasibility.'
     },
     {
       minPct: 90,
@@ -85,7 +85,7 @@
       label: 'A (Excellent)',
       shortLabel: 'Excellent',
       className: 'grade-excellent',
-      tip: 'Outstanding performance! You have demonstrated deep command of core SAD methodologies, SDLC phase deliverables, and requirements engineering.'
+      tip: 'Outstanding performance! You have demonstrated deep command of core Software Engineering methodologies, SDLC phase deliverables, and requirements engineering.'
     },
     {
       minPct: 85,

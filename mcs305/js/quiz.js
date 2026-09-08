@@ -1,5 +1,5 @@
 /**
- * MCS 305: Systems Analysis and Design — Question Rendering & Interactive Quiz Controller
+ * MCS 305: Software Engineering — Question Rendering & Interactive Quiz Controller
  * 
  * Manages:
  * - Dynamic rendering of question stems, syllabus module badges, and difficulty indicators
@@ -114,7 +114,7 @@
 
     // 1. Topic Badge: Module ID + Title
     if (els.topicBadge) {
-      const lesson = question.lessonTitle || question.lessonId || 'Systems Analysis';
+      const lesson = question.lessonTitle || question.lessonId || 'Software Engineering';
       els.topicBadge.textContent = `${question.lessonId || ''}: ${lesson}`;
     }
 
@@ -278,7 +278,7 @@
               <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
               <polyline points="22 4 12 14.01 9 11.01"/>
             </svg>
-            <span>Correct! Accurate Systems Analysis</span>
+            <span>Correct! Accurate Software Engineering</span>
           </div>
         `;
       } else {

@@ -1,5 +1,5 @@
 /**
- * MCS 305: Systems Analysis and Design — Master Question Bank
+ * MCS 305: Software Engineering — Master Question Bank
  * Complete Curriculum Dataset (Modules M1 to M7 | IDs 1 to 210)
  * Total Items: 210 (30 per module | 10 Easy, 10 Medium, 10 Hard per module)
  */

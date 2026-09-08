@@ -1,5 +1,5 @@
 /**
- * MCS 305: Systems Analysis and Design — State Machine & Session Management
+ * MCS 305: Software Engineering — State Machine & Session Management
  * 
  * Manages:
  * - Finite State Machine (STATES: WELCOME, QUESTION, FEEDBACK, RESULTS, REVIEW)
