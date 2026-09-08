@@ -127,7 +127,8 @@
   const COURSE_AI_KEYS = {
     mcs306: 'MCS306_AI_ENABLED',
     mcs305: 'MCS305_AI_ENABLED',
-    mat304a: 'MAT304a_AI_ENABLED'
+    mat304a: 'MAT304a_AI_ENABLED',
+    twm301: 'TWM301_AI_ENABLED'
   };
 
   const API_STORAGE_KEYS = [
@@ -137,6 +138,8 @@
     'mcs305_gemini_api_key',
     'MAT304a_GEMINI_API_KEY',
     'mat304a_gemini_api_key',
+    'TWM301_GEMINI_API_KEY',
+    'twm301_gemini_api_key',
     'gemini_api_key'
   ];
 

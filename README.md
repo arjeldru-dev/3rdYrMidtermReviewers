@@ -15,7 +15,7 @@ Features high-yield question banks, step-by-step canonical proofs, KaTeX mathema
 | **MCS 305** | **Software Engineering** | `Live` | **210 Problems** | Kendall & Kendall, Dennis, Wixom & Roth, Sommerville, Pressman: Systems Concepts, SDLC Lifecycles (PADIM), Fact-Finding & Investigation, Process Models (Agile/Scrum, Waterfall, Prototyping, Spiral), TELOS Feasibility & Cost-Benefit Analysis (ROI, NPV, Payback), Requirements Engineering (FURPS+, IEEE 830), DFD Leveling & Balancing, KaTeX economic formulas, Gemini Flash AI Tutor, Topic Mastery Analytics |
 | **MAT 301** | **Advanced Calculus 1** | `Planned` | Midterm Deck | Real Analysis, Sequences & Series, Cauchy Convergence, Bolzano-Weierstrass, Metric Spaces |
 | **MAT 302** | **Modern Geometry** | `Planned` | Midterm Deck | Axiomatic Systems, Non-Euclidean Geometry, Isometries, Hyperbolic Plane |
-| **TWM 301** | **Technical Writing in Mathematics** | `Planned` | Midterm Deck | LaTeX Document Crafting, Proof Exposition, BibTeX References, Scientific Reports |
+| **TWM 301** | **Technical Writing in Mathematics** | `Live` | **112 Problems** | Leslie Lamport, Nicholas J. Higham & George Grätzer: LaTeX Document Crafting, AMS-LaTeX Math Environments, Preamble Configuration, Delimiter Scaling, Floats & Tables, BibTeX Citations, Mathematical Writing Style & Ethics, KaTeX typesetting, Gemini Flash AI Tutor |
 
 ---
 
@@ -74,6 +74,7 @@ Configured via [`vercel.json`](./vercel.json):
 * **MCS 306 Reviewer:** `https://<your-app>.vercel.app/mcs306`
 * **MAT 304a Reviewer:** `https://<your-app>.vercel.app/mat304a`
 * **MCS 305 Reviewer:** `https://<your-app>.vercel.app/mcs305`
+* **TWM 301 Reviewer:** `https://<your-app>.vercel.app/twm301`
 
 ---
 
@@ -112,21 +113,34 @@ Configured via [`vercel.json`](./vercel.json):
 │   │   ├── review.js        # Post-exam review drawer and mistakes filter
 │   │   └── state.js         # Reactive state machine, exam modes, localStorage persistence
 │   └── data/questions.js    # 70 verified multiple-choice questions (Taha, Hillier & Lieberman)
-└── mcs305/                  # Software Engineering (210 Qs across 7 Modules)
+├── mcs305/                  # Software Engineering (210 Qs across 7 Modules)
+│   ├── index.html           # Single-page active recall studio (Welcome, Quiz, Results, Review)
+│   ├── mcs305_offline.html  # 100% Self-Contained Standalone HTML (Phone & Offline Review)
+│   ├── build_offline.js     # Bundler script to re-compile offline HTML
+│   ├── css/style.css        # Studio design system, responsive dark/light theme, KaTeX formulas
+│   ├── js/
+│   │   ├── ai.js            # Gemini 2.0 Flash client with auto-failover & persistent caching
+│   │   ├── feedback.js      # Immediate pedagogical breakdown (Proof, Distractors, Takeaway)
+│   │   ├── math.js          # KaTeX typesetting engine for CBA, ROI, and NPV equations
+│   │   ├── progress.js      # Live progress indicator, streak tracking, header metrics
+│   │   ├── quiz.js          # Question presentation, keyboard shortcuts, option selection
+│   │   ├── results.js       # Diagnostic score breakdown & 7-module topic mastery analytics
+│   │   ├── review.js        # Post-exam review drawer and mistakes filter
+│   │   └── state.js         # Reactive state machine, exam modes, localStorage persistence
+│   └── data/questions.js    # 210 verified questions across 7 modules (Kendall & Kendall, Dennis)
+└── twm301/                  # Technical Writing with LaTeX (112 Qs across 7 Syllabus Modules)
     ├── index.html           # Single-page active recall studio (Welcome, Quiz, Results, Review)
-    ├── mcs305_offline.html  # 100% Self-Contained Standalone HTML (Phone & Offline Review)
-    ├── build_offline.js     # Bundler script to re-compile offline HTML
-    ├── css/style.css        # Studio design system, responsive dark/light theme, KaTeX formulas
+    ├── css/style.css        # Studio design tokens, cyber dark/light mode, KaTeX math typesetting
     ├── js/
-    │   ├── ai.js            # Gemini 2.0 Flash client with auto-failover & persistent caching
-    │   ├── feedback.js      # Immediate pedagogical breakdown (Proof, Distractors, Takeaway)
-    │   ├── math.js          # KaTeX typesetting engine for CBA, ROI, and NPV equations
-    │   ├── progress.js      # Live progress indicator, streak tracking, header metrics
-    │   ├── quiz.js          # Question presentation, keyboard shortcuts, option selection
+    │   ├── ai.js            # Gemini 2.0 Flash client with auto-failover & shared hub API key fallback
+    │   ├── feedback.js      # Immediate textbook pedagogical breakdown & AI tutor expansion
+    │   ├── math.js          # KaTeX typesetting engine for mathematical formulas & code syntax
+    │   ├── progress.js      # Progress track bar, question counter, running score pulse
+    │   ├── quiz.js          # Question presentation, keyboard shortcuts (A-D, Enter), option selection
     │   ├── results.js       # Diagnostic score breakdown & 7-module topic mastery analytics
-    │   ├── review.js        # Post-exam review drawer and mistakes filter
-    │   └── state.js         # Reactive state machine, exam modes, localStorage persistence
-    └── data/questions.js    # 210 verified questions across 7 modules (Kendall & Kendall, Dennis)
+    │   ├── review.js        # Comprehensive post-exam review drawer and filter
+    │   └── state.js         # Reactive state machine, stratified deck generation, persistence
+    └── data/questions.js    # 112 verified questions across 7 topics (Lamport, Higham, Grätzer)
 ```
 
 ### 📱 100% Offline Mobile Phone Reviewer
@@ -145,3 +159,5 @@ All curriculum alignments reference standard university textbooks:
 * **MCS 306**: Stuart Russell & Peter Norvig, *Artificial Intelligence: A Modern Approach*.
 * **MAT 304a**: Hamdy A. Taha, *Operations Research: An Introduction*; Frederick S. Hillier & Gerald J. Lieberman, *Introduction to Operations Research*.
 * **MCS 305**: Kenneth E. Kendall & Julie E. Kendall, *Systems Analysis and Design*; Alan Dennis, Barbara Haley Wixom, & Roberta M. Roth, *Systems Analysis and Design*; Ian Sommerville, *Software Engineering*; Roger S. Pressman & Bruce R. Maxim, *Software Engineering: A Practitioner's Approach*.
+* **TWM 301**: Leslie Lamport, *LaTeX: A Document Preparation System* (Addison-Wesley); Nicholas J. Higham, *Handbook of Writing for the Mathematical Sciences* (SIAM); George Grätzer, *More Math Into LaTeX* (Springer).
+
