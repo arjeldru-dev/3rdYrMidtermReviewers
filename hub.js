@@ -126,12 +126,15 @@
   const GLOBAL_AI_KEY = 'studyhub_ai_enabled';
   const COURSE_AI_KEYS = {
     mcs306: 'MCS306_AI_ENABLED',
+    mcs305: 'MCS305_AI_ENABLED',
     mat304a: 'MAT304a_AI_ENABLED'
   };
 
   const API_STORAGE_KEYS = [
     'MCS306_GEMINI_API_KEY',
     'mcs306_gemini_api_key',
+    'MCS305_GEMINI_API_KEY',
+    'mcs305_gemini_api_key',
     'MAT304a_GEMINI_API_KEY',
     'mat304a_gemini_api_key',
     'gemini_api_key'

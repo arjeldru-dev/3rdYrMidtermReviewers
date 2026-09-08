@@ -6,9 +6,14 @@
   <meta name="description" content="MCS 305 Systems Analysis and Design Midterm Reviewer & Cognitive Active Recall Studio with AI Tutor Co-Pilot.">
   <title>MCS 305 · SAD Midterm Reviewer | Cognitive Active Recall Studio</title>
 
-  <!-- FOUC Prevention Script -->
+  <!-- Trailing Slash Normalization & FOUC Prevention Script -->
   <script>
     (function() {
+      // Ensure trailing slash for directory route so relative assets (css/style.css, js/...) resolve properly
+      if (window.location.pathname.endsWith('/mcs305')) {
+        window.location.replace(window.location.pathname + '/' + window.location.search + window.location.hash);
+        return;
+      }
       try {
         var savedTheme = localStorage.getItem('MCS305_THEME') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);

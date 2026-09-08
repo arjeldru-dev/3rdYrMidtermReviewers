@@ -6,6 +6,15 @@
   <meta name="description" content="Cognitive AI Reviewer & Active Recall Studio for MCS 306 (Introduction to Artificial Intelligence).">
   <title>MCS 306 · AI Midterm Reviewer | Cognitive Active Recall Studio</title>
 
+  <!-- Trailing Slash Normalization Script -->
+  <script>
+    (function() {
+      if (window.location.pathname.endsWith('/mcs306')) {
+        window.location.replace(window.location.pathname + '/' + window.location.search + window.location.hash);
+      }
+    })();
+  </script>
+
   <!-- Google Fonts Preconnect & High-Performance Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
