@@ -114,6 +114,8 @@ Configured via [`vercel.json`](./vercel.json):
 │   └── data/questions.js    # 70 verified multiple-choice questions (Taha, Hillier & Lieberman)
 └── mcs305/                  # Software Engineering (210 Qs across 7 Modules)
     ├── index.html           # Single-page active recall studio (Welcome, Quiz, Results, Review)
+    ├── mcs305_offline.html  # 100% Self-Contained Standalone HTML (Phone & Offline Review)
+    ├── build_offline.js     # Bundler script to re-compile offline HTML
     ├── css/style.css        # Studio design system, responsive dark/light theme, KaTeX formulas
     ├── js/
     │   ├── ai.js            # Gemini 2.0 Flash client with auto-failover & persistent caching
@@ -126,6 +128,13 @@ Configured via [`vercel.json`](./vercel.json):
     │   └── state.js         # Reactive state machine, exam modes, localStorage persistence
     └── data/questions.js    # 210 verified questions across 7 modules (Kendall & Kendall, Dennis)
 ```
+
+### 📱 100% Offline Mobile Phone Reviewer
+If you want to study on your mobile phone without an internet connection or web server:
+- Open or download [`mcs305_offline.html`](file:///d:/306MIDTERM%20REVIEWER/mcs305/mcs305_offline.html) (also available in the repository root).
+- It consolidates the full 81 KB stylesheet, 210-item question bank, state engine, formulas, audio synthesizers, and scoring logic into a single self-contained ~730 KB HTML file.
+- Open it directly in Chrome, Safari, or Firefox on iOS / Android with **zero setup and zero network requirements**.
+- To rebuild after updating questions or styles: `node mcs305/build_offline.js`.
 
 ---
 
